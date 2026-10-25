@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Staff sign in{% endblock %}
+{% block content %}
+<section class="login-layout">
+  <div class="login-intro"><p class="eyebrow">THE PEOPLE BEHIND EVERY STAY</p><h1>Every stay,<br>thoughtfully arranged.</h1><p>From the first reservation to the final farewell, keep every stay running smoothly.</p><div class="line-art" aria-hidden="true"><span>H</span><i></i><i></i><i></i></div><p class="caption">HARBOUR HOUSE / STAFF PORTAL</p></div>
+  <div class="panel login-panel"><p class="eyebrow">WELCOME BACK</p><h2>Staff sign in</h2><p class="muted">Sign in with your individual staff account.</p>
+    <form method="post" class="stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label>Username<input name="username" autocomplete="username" maxlength="40" required autofocus placeholder="Enter your username"></label>
+      <label>Password<input type="password" name="password" autocomplete="current-password" maxlength="128" required placeholder="Enter your password"></label>
+      <button type="submit">Sign in <span>→</span></button>
+    </form><p class="hint">Change your temporary password on first sign-in. Contact your manager if you need help with your account.</p>
+  </div>
+</section>
+{% endblock %}

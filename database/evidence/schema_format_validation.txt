@@ -1,0 +1,88 @@
+PASS classroom-style schema created in a disposable test schema.
+PASS live catalog equivalence: 28 columns, 29 constraints, 12 indexes.
+PASS 43 constraint/positive checks and 1 documented service boundary on the reformatted schema.
+PASS original demonstration data counts unchanged: (4, 3, 6, 14, 11).
+No DDL was executed in the demonstration schema.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+P01 zero price allowed|PASS
+P02 nullable duplicate contacts allowed|PASS
+P03 same-name occupants allowed|PASS
+P04 defaults|PASS
+C01 guest PK|PASS 23505
+C02 name required|PASS 23502
+C03 blank name|PASS 23514
+C04 phone required|PASS 23502
+C05 whitespace phone|PASS 23514
+C06 type unique|PASS 23505
+C07 capacity positive|PASS 23514
+C08 base price nonnegative|PASS 23514
+C09 finite base price|PASS 23514
+C10 room number unique|PASS 23505
+C11 room type FK|PASS 23503
+C12 cleaning explicit|PASS 23502
+C13 cleaning domain|PASS 23514
+C14 guest FK|PASS 23503
+C15 room FK|PASS 23503
+C16 predecessor FK|PASS 23503
+C17 no self link|PASS 23514
+C18 positive nights|PASS 23514
+C19 finite dates|PASS 23514
+C20 party positive|PASS 23514
+C21 agreed price nonnegative|PASS 23514
+C22 finite agreed price|PASS 23514
+C23 status domain|PASS 23514
+C24 status required|PASS 23502
+C25 arrival time required|PASS 23514
+C26 confirmed has no actual time|PASS 23514
+C27 cancelled has no actual time|PASS 23514
+C28 departure time required|PASS 23514
+C29 actual time order|PASS 23514
+C30 occupant FK|PASS 23503
+C31 occupant nonblank|PASS 23514
+C32 contact deletion restricted|PASS 23503
+C33 type deletion restricted|PASS 23503
+C34 room deletion restricted|PASS 23503
+C35 reservation deletion restricted|PASS 23503
+C36 one noncancelled successor|PASS 23505
+P05 cancelled successor retry allowed|PASS
+C37 one actual occupant reservation|PASS 23505
+P06 valid actual timestamps|PASS
+B01 capacity and overlap are service boundaries|CONFIRMED BOUNDARY
+43|1

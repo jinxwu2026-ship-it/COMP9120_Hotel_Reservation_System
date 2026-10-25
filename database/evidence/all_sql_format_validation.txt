@@ -1,0 +1,15 @@
+PASS create_database.sql: SQL tokens unchanged; existing databases were not recreated.
+PASS schema.sql + seed.sql: fresh isolated schema has expected rows (4, 3, 6, 14, 11).
+PASS Room lock race: 2 independent connections, 1 booking; B waited 2.00s.
+
+ROLLBACK
+PASS injected division-by-zero: checkout and room state unchanged.
+
+SUMMARY: 43 constraint/positive checks + 1 documented boundary; 35 SQL cases; 1 two-connection race; 1 rollback case.
+Not tested: Python driver adaptation, service functions, menus, complete continuation transaction or service acceptance tests.
+Evidence: D:\Study\CourseNotes\COMP9120\assignment\database\evidence\database_validation.txt
+
+PASS standalone sql_examples.sql, including database guard and every PREPARE/EXECUTE block.
+PASS test schema records preserved after verification; no race fixture rows remain.
+PASS demonstration data unchanged: (4, 3, 6, 14, 11).
+PASS all five SQL files use plain SQL and block comments, without psql meta-commands.

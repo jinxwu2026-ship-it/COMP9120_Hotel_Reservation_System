@@ -1,0 +1,168 @@
+{
+  "checked_at_utc": "2026-10-24T10:05:13.324930+00:00",
+  "database": "comp9120_hotel",
+  "schema": "public",
+  "before": {
+    "guest": 4,
+    "room_type": 3,
+    "room": 6,
+    "reservation": 14,
+    "reservation_guest": 11
+  },
+  "after": {
+    "guest": 50,
+    "room_type": 8,
+    "room": 40,
+    "reservation": 200,
+    "reservation_guest": 351
+  },
+  "all_original_rows_preserved_exactly": true,
+  "statuses": [
+    [
+      "cancelled",
+      65
+    ],
+    [
+      "checked_in",
+      6
+    ],
+    [
+      "checked_out",
+      58
+    ],
+    [
+      "confirmed",
+      71
+    ]
+  ],
+  "housekeeping": [
+    [
+      "clean",
+      17
+    ],
+    [
+      "cleaning",
+      11
+    ],
+    [
+      "dirty",
+      12
+    ]
+  ],
+  "role": [
+    [
+      "hotel_owner",
+      true,
+      true,
+      true
+    ]
+  ],
+  "indexes": [
+    [
+      "guest_pkey",
+      "CREATE UNIQUE INDEX guest_pkey ON public.guest USING btree (guest_id)"
+    ],
+    [
+      "ix_reservation_active_dates",
+      "CREATE INDEX ix_reservation_active_dates ON public.reservation USING btree (room_id, check_in_date, check_out_date) WHERE (status = ANY (ARRAY['confirmed'::text, 'checked_in'::text]))"
+    ],
+    [
+      "ix_reservation_contact",
+      "CREATE INDEX ix_reservation_contact ON public.reservation USING btree (guest_id)"
+    ],
+    [
+      "ix_reservation_guest_parent",
+      "CREATE INDEX ix_reservation_guest_parent ON public.reservation_guest USING btree (reservation_id)"
+    ],
+    [
+      "reservation_guest_pkey",
+      "CREATE UNIQUE INDEX reservation_guest_pkey ON public.reservation_guest USING btree (reservation_guest_id)"
+    ],
+    [
+      "reservation_pkey",
+      "CREATE UNIQUE INDEX reservation_pkey ON public.reservation USING btree (reservation_id)"
+    ],
+    [
+      "room_pkey",
+      "CREATE UNIQUE INDEX room_pkey ON public.room USING btree (room_id)"
+    ],
+    [
+      "room_room_number_key",
+      "CREATE UNIQUE INDEX room_room_number_key ON public.room USING btree (room_number)"
+    ],
+    [
+      "room_type_pkey",
+      "CREATE UNIQUE INDEX room_type_pkey ON public.room_type USING btree (room_type_id)"
+    ],
+    [
+      "room_type_type_name_key",
+      "CREATE UNIQUE INDEX room_type_type_name_key ON public.room_type USING btree (type_name)"
+    ],
+    [
+      "uq_reservation_successor",
+      "CREATE UNIQUE INDEX uq_reservation_successor ON public.reservation USING btree (previous_reservation_id) WHERE ((previous_reservation_id IS NOT NULL) AND (status <> 'cancelled'::text))"
+    ],
+    [
+      "uq_room_checked_in",
+      "CREATE UNIQUE INDEX uq_room_checked_in ON public.reservation USING btree (room_id) WHERE (status = 'checked_in'::text)"
+    ]
+  ],
+  "contact_history_plan": [
+    [
+      "Seq Scan on reservation  (cost=0.00..5.50 rows=6 width=67) (actual time=0.007..0.016 rows=6 loops=1)"
+    ],
+    [
+      "  Filter: (guest_id = 5)"
+    ],
+    [
+      "  Rows Removed by Filter: 194"
+    ],
+    [
+      "  Buffers: shared hit=3"
+    ],
+    [
+      "Planning:"
+    ],
+    [
+      "  Buffers: shared hit=39"
+    ],
+    [
+      "Planning Time: 0.093 ms"
+    ],
+    [
+      "Execution Time: 0.026 ms"
+    ]
+  ],
+  "availability_plan": [
+    [
+      "Index Scan using ix_reservation_active_dates on reservation  (cost=0.15..8.19 rows=1 width=4) (actual time=0.005..0.005 rows=1 loops=1)"
+    ],
+    [
+      "  Index Cond: ((room_id = 7) AND (check_in_date < (CURRENT_DATE + 33)) AND (check_out_date > (CURRENT_DATE + 30)))"
+    ],
+    [
+      "  Buffers: shared hit=2"
+    ],
+    [
+      "Planning:"
+    ],
+    [
+      "  Buffers: shared hit=19"
+    ],
+    [
+      "Planning Time: 0.102 ms"
+    ],
+    [
+      "Execution Time: 0.014 ms"
+    ]
+  ],
+  "historical_refinement": {
+    "checked_at_utc": "2026-10-24T10:11:14.416829+00:00",
+    "new_historical_rows_updated": 22,
+    "all_other_reservations_preserved_exactly": true,
+    "noncancelled_planned_overlaps": 0,
+    "actual_occupancy_overlaps": 0,
+    "historical_handover_violations": 0,
+    "note": "Eleven new historical pairs staggered five days apart, matching revised seed_more.sql."
+  }
+}

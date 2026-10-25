@@ -1,0 +1,40 @@
+{
+  "core_counts": [
+    50,
+    8,
+    40,
+    200,
+    351
+  ],
+  "staff_accounts": [
+    [
+      "manager",
+      "Hotel Manager",
+      "manager",
+      true,
+      false
+    ],
+    [
+      "reception",
+      "Front Desk",
+      "receptionist",
+      true,
+      true
+    ]
+  ],
+  "web_database_role": [
+    "hotel_app",
+    false,
+    false,
+    false
+  ],
+  "privilege_checks": {
+    "create_schema_objects": false,
+    "update_room_type": false,
+    "delete_reservation": false,
+    "delete_roster": true,
+    "insert_staff": true
+  },
+  "low_privilege_login_and_forced_password_page": "PASS; temporary password unchanged",
+  "interface_language": "en"
+}

@@ -1,0 +1,22 @@
+test_all_28_sql_interfaces_match_requirement (__main__.ServiceIntegrationTests.test_all_28_sql_interfaces_match_requirement) ... ok
+test_booking_validation_and_price_snapshot (__main__.ServiceIntegrationTests.test_booking_validation_and_price_snapshot) ... ok
+test_cancellation_ownership_deadline_and_history (__main__.ServiceIntegrationTests.test_cancellation_ownership_deadline_and_history) ... ok
+test_checkout_failure_rolls_back_both_updates (__main__.ServiceIntegrationTests.test_checkout_failure_rolls_back_both_updates) ... ok
+test_concurrent_bookings_only_one_success (__main__.ServiceIntegrationTests.test_concurrent_bookings_only_one_success) ... ok
+test_concurrent_extensions_only_one_successor (__main__.ServiceIntegrationTests.test_concurrent_extensions_only_one_successor) ... ok
+test_connection_readonly_and_execution_time (__main__.ServiceIntegrationTests.test_connection_readonly_and_execution_time) ... ok
+test_contacts_types_and_result_shapes (__main__.ServiceIntegrationTests.test_contacts_types_and_result_shapes) ... ok
+test_continuation_activation_window_dirty_target_and_quote_change (__main__.ServiceIntegrationTests.test_continuation_activation_window_dirty_target_and_quote_change) ... ok
+test_dirty_closed_and_physically_occupied_arrivals_refused (__main__.ServiceIntegrationTests.test_dirty_closed_and_physically_occupied_arrivals_refused) ... ok
+test_dirty_continuation_target_preserves_old_stay (__main__.ServiceIntegrationTests.test_dirty_continuation_target_preserves_old_stay) ... ok
+test_room_change_and_quote_preference (__main__.ServiceIntegrationTests.test_room_change_and_quote_preference) ... ok
+test_room_change_failure_rolls_back_all_updates (__main__.ServiceIntegrationTests.test_room_change_failure_rolls_back_all_updates) ... ok
+test_roster_arrival_checkout_and_cleaning_lifecycle (__main__.ServiceIntegrationTests.test_roster_arrival_checkout_and_cleaning_lifecycle) ... ok
+test_same_room_continuation_keeps_room_clean_and_roster_history (__main__.ServiceIntegrationTests.test_same_room_continuation_keeps_room_clean_and_roster_history) ... ok
+test_search_overlap_adjacency_capacity_and_dirty_future_room (__main__.ServiceIntegrationTests.test_search_overlap_adjacency_capacity_and_dirty_future_room) ... ok
+test_staff_exact_search_all_and_duplicate_phone (__main__.ServiceIntegrationTests.test_staff_exact_search_all_and_duplicate_phone) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 10.276s
+
+OK

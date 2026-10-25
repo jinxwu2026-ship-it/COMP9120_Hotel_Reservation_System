@@ -1,0 +1,20 @@
+test_cli_staff_adapter_enforces_authentication_and_manager_permission (__main__.WebTests.test_cli_staff_adapter_enforces_authentication_and_manager_permission) ... ok
+test_concurrent_manager_disables_preserve_an_active_manager (__main__.WebTests.test_concurrent_manager_disables_preserve_an_active_manager) ... ok
+test_contact_creation_roster_removal_and_cancellation (__main__.WebTests.test_contact_creation_roster_removal_and_cancellation) ... ok
+test_csrf_rejects_login_and_every_write_and_host_is_restricted (__main__.WebTests.test_csrf_rejects_login_and_every_write_and_host_is_restricted) ... ok
+test_disable_revokes_session_and_last_manager_cannot_be_disabled (__main__.WebTests.test_disable_revokes_session_and_last_manager_cannot_be_disabled) ... ok
+test_http_booking_roster_checkin_checkout_and_cleaning (__main__.WebTests.test_http_booking_roster_checkin_checkout_and_cleaning) ... ok
+test_http_continuation_quote_activation_and_atomic_rollback (__main__.WebTests.test_http_continuation_quote_activation_and_atomic_rollback) ... [2026-10-24 22:34:33,867] ERROR in web: Database operation failed; SQLSTATE=22012
+ok
+test_invalid_input_and_invalid_actions_do_not_write (__main__.WebTests.test_invalid_input_and_invalid_actions_do_not_write) ... ok
+test_logout_revokes_replayed_cookie_and_sensitive_pages_not_cached (__main__.WebTests.test_logout_revokes_replayed_cookie_and_sensitive_pages_not_cached) ... ok
+test_manager_staff_creation_hash_force_password_change_and_reset (__main__.WebTests.test_manager_staff_creation_hash_force_password_change_and_reset) ... ok
+test_public_search_no_private_data_and_all_staff_routes_require_login (__main__.WebTests.test_public_search_no_private_data_and_all_staff_routes_require_login) ... ok
+test_reception_cannot_manage_staff_or_room_open_but_can_clean (__main__.WebTests.test_reception_cannot_manage_staff_or_room_open_but_can_clean) ... ok
+test_staff_pages_render_and_escape_guest_input (__main__.WebTests.test_staff_pages_render_and_escape_guest_input) ... ok
+test_wrong_password_lockout_and_parameter_binding (__main__.WebTests.test_wrong_password_lockout_and_parameter_binding) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 13.680s
+
+OK

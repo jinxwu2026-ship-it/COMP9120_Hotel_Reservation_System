@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Multiple-room reservation{% endblock %}
+{% block content %}
+<a class="back" href="{{ url_for('new_reservation') }}">← Single-room reservation</a>
+<div class="page-heading"><div><p class="eyebrow">ONE SUBMISSION · MULTIPLE ROOMS</p><h1>Book the rooms together.</h1><p class="muted">One contact and the same stay dates. All selected rooms are booked, or none are.</p></div></div>
+{% if review is not none %}
+<section class="panel"><h2>Review before confirming</h2><p>Contact #{{ request.form.guest_id }} · {{ start }} → {{ end }}</p>
+<div class="table-scroll"><table><thead><tr><th>Room</th><th>Type</th><th>Guests</th><th>Standard / night</th><th>Agreed / night</th><th>Stay total</th></tr></thead><tbody>
+{% for r in review %}<tr><td>{{ r.number }}</td><td>{{ r.type_name }}</td><td>{{ r.guests }}</td><td>{{ r.quoted_base }}</td><td>{{ '%.2f'|format(r.rate) }}</td><td>{{ '%.2f'|format(r.amount) }}</td></tr>{% endfor %}
+</tbody></table></div><h2 class="section-gap">Combined total {{ '%.2f'|format(total) }}</h2>
+{% if request.form.reason %}<p>Reason: {{ request.form.reason }}</p>{% endif %}
+<form method="post" data-confirm="Book every listed room at these agreed rates? If any room is unavailable, no reservations will be created.">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="stage" value="confirm">
+<input type="hidden" name="guest_id" value="{{ request.form.guest_id }}"><input type="hidden" name="check_in" value="{{ start }}"><input type="hidden" name="check_out" value="{{ end }}">
+<input type="hidden" name="reason" value="{{ request.form.reason }}">
+{% for r in review %}<input type="hidden" name="room_id" value="{{ r.room_id }}"><input type="hidden" name="guests_{{ r.room_id }}" value="{{ r.guests }}"><input type="hidden" name="quoted_base_{{ r.room_id }}" value="{{ r.quoted_base }}">{% if r.discount_rate is not none %}<input type="hidden" name="discount_rate_{{ r.room_id }}" value="{{ r.discount_rate }}">{% endif %}{% endfor %}
+<button>Confirm all rooms →</button> <a href="{{ url_for('multiple_reservations',check_in=start,check_out=end) }}">Start again</a>
+</form><p class="hint">After creation, each room has its own reservation number and is managed separately. Complete each staying-guest list before check-in.</p></section>
+{% else %}
+<form method="get" class="panel filter-form"><label>Check-in date<input type="text" data-english-date placeholder="YYYY-MM-DD" inputmode="numeric" maxlength="10" autocomplete="off" name="check_in" value="{{ start }}" required></label><label>Check-out date<input type="text" data-english-date placeholder="YYYY-MM-DD" inputmode="numeric" maxlength="10" autocomplete="off" name="check_out" value="{{ end }}" required></label><button>Find rooms</button></form>
+{% if options is not none %}<form method="post" class="panel stack">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="stage" value="review"><input type="hidden" name="check_in" value="{{ start }}"><input type="hidden" name="check_out" value="{{ end }}">
+<label>Booking contact<select name="guest_id" required><option value="">Select a contact</option>{% for c in contacts %}<option value="{{ c[0] }}">#{{ c[0] }} · {{ c[1] }} · {{ c[2] }}</option>{% endfor %}</select></label>
+<div class="table-scroll"><table><thead><tr><th>Select</th><th>Room / type</th><th>Capacity</th><th>Standard / night</th><th>Guests</th>{% if staff.role=='manager' %}<th>Optional discount / night</th>{% endif %}</tr></thead><tbody>
+{% for r in options %}<tr><td><input class="room-checkbox" type="checkbox" name="room_id" value="{{ r[0] }}" aria-label="Select room {{ r[1] }}"></td><td>{{ r[1] }} · {{ r[2] }}</td><td>{{ r[3] }}</td><td>{{ '%.2f'|format(r[4]) }}<input type="hidden" name="quoted_base_{{ r[0] }}" value="{{ r[4] }}"></td><td><input type="number" name="guests_{{ r[0] }}" value="1" min="1" max="{{ r[3] }}" aria-label="Guests in room {{ r[1] }}"></td>{% if staff.role=='manager' %}<td><input type="number" name="discount_rate_{{ r[0] }}" min="0" max="{{ r[4] }}" step="0.01" aria-label="Discounted nightly rate for room {{ r[1] }}"></td>{% endif %}</tr>{% else %}<tr><td>No rooms are available for these dates.</td></tr>{% endfor %}
+</tbody></table></div>
+{% if staff.role=='manager' %}<label>Discount reason (required when applying any discount)<input name="reason" maxlength="500"></label>{% endif %}
+<button>Review selected rooms and total →</button></form>{% endif %}
+{% endif %}
+{% endblock %}

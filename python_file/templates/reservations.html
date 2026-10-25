@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}Reservation management{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">RESERVATIONS</p><h1>Every reservation, clearly arranged.</h1><p class="muted">Manage booking contacts, stay dates, arrivals and continuations.</p></div><a class="button" href="{{ url_for('new_reservation') }}">+ New reservation</a></div>
+<form method="get" class="panel filter-form"><label>Exact search<input name="keyword" value="{{ keyword }}" placeholder="Reservation ID, full contact name or phone"></label><label>Reservation status<select name="status"><option value="">All statuses</option>{% for value,label in [('confirmed','Confirmed'),('checked_in','Checked in'),('checked_out','Checked out'),('cancelled','Cancelled')] %}<option value="{{ value }}" {% if status==value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label><button>Search reservations</button><a href="{{ url_for('reservations') }}">Reset</a></form>
+<section class="panel"><div class="section-heading"><h2>Reservations <span class="muted">{{ rows|length }}</span></h2></div>{% include 'booking_table.html' %}</section>
+{% endblock %}

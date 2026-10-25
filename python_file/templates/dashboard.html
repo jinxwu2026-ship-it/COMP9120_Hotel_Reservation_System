@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">DAILY OPERATIONS</p><h1>Everything in place.</h1><p class="muted">{{ staff.display_name }}, welcome back. Here is an overview of current stays and room readiness.</p></div><a class="button" href="{{ url_for('new_reservation') }}">+ New reservation</a></div>
+<section class="metric-grid" aria-label="Operations overview">{% for label in ['Total rooms','In-house stays','Awaiting check-in','Needs housekeeping'] %}<article class="panel metric"><span>{{ label }}</span><strong>{{ metrics[loop.index0] }}</strong><small>{{ ['rooms','stays','confirmed reservations','rooms'][loop.index0] }}</small></article>{% endfor %}</section>
+<section class="panel"><div class="section-heading"><div><p class="eyebrow">IN HOUSE</p><h2>In-house stays</h2></div><a href="{{ url_for('reservations', status='checked_in') }}">View in-house reservations ↗</a></div>{% include 'booking_table.html' %}</section>
+<section class="panel section-gap"><div class="section-heading"><div><p class="eyebrow">BOOKING OVERVIEW</p><h2>Reservations by room type</h2></div><p class="muted">Planned booking value, not collected revenue. Currency is not specified.</p></div><div class="table-scroll"><table><thead><tr><th>Room type</th><th>All reservations</th><th>Cancelled</th><th>Non-cancelled booking value</th></tr></thead><tbody>{% for r in statistics %}<tr><td>{{ r[0] }}</td><td>{{ r[1] }}</td><td>{{ r[2] }}</td><td>{{ '%.2f'|format(r[3]) }}</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

@@ -1,0 +1,196 @@
+
+Hotel Reservation System
+1 Customer
+2 Staff
+0 Exit
+
+Choose a role: Use Room ID for actions; Room no. is the door number.
+
+Staff Menu
+ 1 View room types                 10 View staying guests
+ 2 View rooms                      11 Check in
+ 3 Search available rooms          12 Check out
+ 4 Register new booking contact    13 Open or close room for bookings
+ 5 Create reservation              14 Update housekeeping status
+ 6 View / search reservations      15 View extension options
+ 7 Cancel reservation              16 Create extension / continuation
+ 8 Add staying guest               17 Activate continuation
+ 9 Remove staying guest            18 Booking statistics
+ B Back to role selection
+ 0 Exit
+
+Choose an option: Type ID | Type   | Capacity | Base nightly rate
+--------+--------+----------+------------------
+1       | Single | 1        | 120.00           
+2       | Double | 2        | 180.00           
+3       | Family | 4        | 240.00           
+
+Staff Menu
+ 1 View room types                 10 View staying guests
+ 2 View rooms                      11 Check in
+ 3 Search available rooms          12 Check out
+ 4 Register new booking contact    13 Open or close room for bookings
+ 5 Create reservation              14 Update housekeeping status
+ 6 View / search reservations      15 View extension options
+ 7 Cancel reservation              16 Create extension / continuation
+ 8 Add staying guest               17 Activate continuation
+ 9 Remove staying guest            18 Booking statistics
+ B Back to role selection
+ 0 Exit
+
+Choose an option: Room ID | Room no. | Type   | Capacity | Base rate | Open | Cleaning
+--------+----------+--------+----------+-----------+------+---------
+1       | 101      | Single | 1        | 120.00    | yes  | clean   
+2       | 102      | Single | 1        | 120.00    | yes  | dirty   
+3       | 201      | Double | 2        | 180.00    | yes  | clean   
+4       | 202      | Double | 2        | 180.00    | yes  | dirty   
+5       | 301      | Family | 4        | 240.00    | yes  | clean   
+6       | 302      | Family | 4        | 240.00    | no   | cleaning
+
+Staff Menu
+ 1 View room types                 10 View staying guests
+ 2 View rooms                      11 Check in
+ 3 Search available rooms          12 Check out
+ 4 Register new booking contact    13 Open or close room for bookings
+ 5 Create reservation              14 Update housekeeping status
+ 6 View / search reservations      15 View extension options
+ 7 Cancel reservation              16 Create extension / continuation
+ 8 Add staying guest               17 Activate continuation
+ 9 Remove staying guest            18 Booking statistics
+ B Back to role selection
+ 0 Exit
+
+Choose an option: Leave the search blank to view all reservations.
+Otherwise enter an exact Reservation ID, full contact name or phone.
+Search: Booking contact and room
+Reservation ID | Guest ID | Contact name | Phone           | Room ID | Room no.
+---------------+----------+--------------+-----------------+---------+---------
+1001           | 1        | Alice Chen   | +61 400 000 001 | 3       | 201     
+1002           | 1        | Alice Chen   | +61 400 000 001 | 5       | 301     
+1003           | 2        | Daniel Lee   | +61 400 000 002 | 1       | 101     
+1004           | 3        | Evelyn Wang  | +61 400 000 003 | 1       | 101     
+1005           | 2        | Daniel Lee   | +61 400 000 002 | 4       | 202     
+1006           | 3        | Evelyn Wang  | +61 400 000 003 | 2       | 102     
+1007           | 4        | Hana Kim     | +61 400 000 003 | 5       | 301     
+1008           | 4        | Hana Kim     | +61 400 000 003 | 4       | 202     
+1009           | 1        | Alice Chen   | +61 400 000 001 | 3       | 201     
+1010           | 2        | Daniel Lee   | +61 400 000 002 | 2       | 102     
+1011           | 4        | Hana Kim     | +61 400 000 003 | 6       | 302     
+1012           | 1        | Alice Chen   | +61 400 000 001 | 5       | 301     
+1013           | 3        | Evelyn Wang  | +61 400 000 003 | 1       | 101     
+1014           | 3        | Evelyn Wang  | +61 400 000 003 | 1       | 101     
+Planned stay and price
+Reservation ID | Room no. | Type   | Check-in   | Check-out  | Guests | Nightly rate | Total  | Status     
+---------------+----------+--------+------------+------------+--------+--------------+--------+------------
+1001           | 201      | Double | 2026-10-23 | 2026-10-25 | 2      | 180.00       | 360.00 | checked_in 
+1002           | 301      | Family | 2026-10-25 | 2026-10-27 | 2      | 240.00       | 480.00 | confirmed  
+1003           | 101      | Single | 2026-10-26 | 2026-10-28 | 1      | 120.00       | 240.00 | confirmed  
+1004           | 101      | Single | 2026-10-28 | 2026-10-30 | 1      | 120.00       | 240.00 | confirmed  
+1005           | 202      | Double | 2026-10-26 | 2026-10-28 | 2      | 180.00       | 360.00 | cancelled  
+1006           | 102      | Single | 2026-10-20 | 2026-10-22 | 1      | 110.00       | 220.00 | checked_out
+1007           | 301      | Family | 2026-10-19 | 2026-10-21 | 3      | 230.00       | 460.00 | checked_out
+1008           | 202      | Double | 2026-10-28 | 2026-10-30 | 2      | 180.00       | 360.00 | confirmed  
+1009           | 201      | Double | 2026-10-27 | 2026-10-29 | 2      | 180.00       | 360.00 | confirmed  
+1010           | 102      | Single | 2026-10-25 | 2026-10-27 | 1      | 120.00       | 240.00 | confirmed  
+1011           | 302      | Family | 2026-10-29 | 2026-10-31 | 4      | 240.00       | 480.00 | cancelled  
+1012           | 301      | Family | 2026-10-25 | 2026-10-27 | 2      | 240.00       | 480.00 | cancelled  
+1013           | 101      | Single | 2026-10-23 | 2026-10-24 | 1      | 120.00       | 120.00 | checked_in 
+1014           | 101      | Single | 2026-10-24 | 2026-10-26 | 1      | 120.00       | 240.00 | confirmed  
+
+Actual stay and previous segment
+Reservation ID | Actual check-in           | Actual check-out          | Previous ID
+---------------+---------------------------+---------------------------+------------
+1001           | 2026-10-23 14:00:00+11:00 | -                         | -          
+1002           | -                         | -                         | 1001       
+1003           | -                         | -                         | -          
+1004           | -                         | -                         | -          
+1005           | -                         | -                         | -          
+1006           | 2026-10-20 15:00:00+11:00 | 2026-10-22 10:00:00+11:00 | -          
+1007           | 2026-10-19 15:00:00+11:00 | 2026-10-21 10:00:00+11:00 | -          
+1008           | -                         | -                         | -          
+1009           | -                         | -                         | -          
+1010           | -                         | -                         | -          
+1011           | -                         | -                         | -          
+1012           | -                         | -                         | 1001       
+1013           | 2026-10-23 15:00:00+11:00 | -                         | -          
+1014           | -                         | -                         | 1013       
+
+Staff Menu
+ 1 View room types                 10 View staying guests
+ 2 View rooms                      11 Check in
+ 3 Search available rooms          12 Check out
+ 4 Register new booking contact    13 Open or close room for bookings
+ 5 Create reservation              14 Update housekeeping status
+ 6 View / search reservations      15 View extension options
+ 7 Cancel reservation              16 Create extension / continuation
+ 8 Add staying guest               17 Activate continuation
+ 9 Remove staying guest            18 Booking statistics
+ B Back to role selection
+ 0 Exit
+
+Choose an option: Planned booking values, not collected revenue. No currency is fixed.
+Type   | All bookings | Cancelled | Noncancelled booked value
+-------+--------------+-----------+--------------------------
+Single | 6            | 0         | 1300.00                  
+Double | 4            | 1         | 1080.00                  
+Family | 4            | 2         | 940.00                   
+
+Staff Menu
+ 1 View room types                 10 View staying guests
+ 2 View rooms                      11 Check in
+ 3 Search available rooms          12 Check out
+ 4 Register new booking contact    13 Open or close room for bookings
+ 5 Create reservation              14 Update housekeeping status
+ 6 View / search reservations      15 View extension options
+ 7 Cancel reservation              16 Create extension / continuation
+ 8 Add staying guest               17 Activate continuation
+ 9 Remove staying guest            18 Booking statistics
+ B Back to role selection
+ 0 Exit
+
+Choose an option: 
+Hotel Reservation System
+1 Customer
+2 Staff
+0 Exit
+
+Choose a role: Use your booking contact Guest ID to create or view reservations.
+New contacts can use option 3 to register first.
+Please contact staff for check-in, check-out or an extension.
+
+Customer Menu
+1 View room types
+2 Search available rooms
+3 Register booking contact
+4 Create reservation
+5 View my reservations
+6 Cancel my reservation
+B Back to role selection
+0 Exit
+
+Choose an option: Enter your stay dates. Check-out must be after check-in.
+Check-in date (YYYY-MM-DD): Check-out date (YYYY-MM-DD): Guest count: Room type ID (blank for all): Check-in: 2026-11-03
+Check-out: 2026-11-05
+Nights: 2
+Guests: 1
+Room type: All room types
+Room ID | Room no. | Type   | Capacity | Nightly quote | Total quote
+--------+----------+--------+----------+---------------+------------
+1       | 101      | Single | 1        | 120.00        | 240.00     
+2       | 102      | Single | 1        | 120.00        | 240.00     
+3       | 201      | Double | 2        | 180.00        | 360.00     
+4       | 202      | Double | 2        | 180.00        | 360.00     
+5       | 301      | Family | 4        | 240.00        | 480.00     
+Quotes do not reserve inventory. Amounts have no agreed currency yet.
+
+Customer Menu
+1 View room types
+2 Search available rooms
+3 Register booking contact
+4 Create reservation
+5 View my reservations
+6 Cancel my reservation
+B Back to role selection
+0 Exit
+
+Choose an option: Goodbye.

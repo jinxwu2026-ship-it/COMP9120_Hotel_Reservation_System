@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}Action not completed{% endblock %}
+{% block content %}<section class="panel error-panel"><p class="eyebrow">PLEASE CHECK / {{ code }}</p><h1>We could not complete that action.</h1><p>{{ message }}</p><div class="action-row"><a class="button" href="{{ url_for('dashboard' if staff else 'availability') }}">Back to {{ 'Dashboard' if staff else 'availability' }}</a><a href="{{ url_for('reservations' if staff else 'login') }}">{{ 'View reservations' if staff else 'Staff sign in' }} ↗</a></div><p class="hint">Go back to check your input. If a write outcome is uncertain, check the reservation before retrying.</p></section>{% endblock %}

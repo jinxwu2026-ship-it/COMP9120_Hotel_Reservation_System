@@ -1,0 +1,10 @@
+test_public_booking_reuses_guest_table_and_marks_unverified_source (test_public_booking.PublicBookingTests.test_public_booking_reuses_guest_table_and_marks_unverified_source) ... ok
+test_public_conflict_stale_price_bad_contact_and_csrf_do_not_create_contacts (test_public_booking.PublicBookingTests.test_public_conflict_stale_price_bad_contact_and_csrf_do_not_create_contacts) ... ok
+test_public_audit_failure_rolls_back_new_contact_and_reservation (test_public_booking.PublicBookingTests.test_public_audit_failure_rolls_back_new_contact_and_reservation) ... ok
+test_existing_guest_id_does_not_grant_customer_access (test_public_booking.PublicBookingTests.test_existing_guest_id_does_not_grant_customer_access) ... ok
+test_english_calendar_markup_and_strict_server_dates (test_public_booking.PublicBookingTests.test_english_calendar_markup_and_strict_server_dates) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 3.485s
+
+OK

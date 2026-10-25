@@ -1,0 +1,11 @@
+2026-10-25 Australia/Sydney
+Browser QA used a disposable schema in comp9120_hotel_test on port 8081.
+Actual hotel_app permissions; ephemeral qa.manager fixture, not a live account.
+PASS manager login; English single-room discount inputs and multiple-room entry.
+PASS multiple-room date search, per-room occupancy and discount fields.
+PASS review: room 101 / 1 guest / 100.00 per night and room 201 / 2 guests / 150.00 per night; 2 nights / combined total 500.00.
+PASS browser confirmation; two independent reservation IDs returned.
+PASS amendment: retained reservation #3023, room 101 -> 102, dates Dec 10-12 -> Dec 11-13, agreed nightly 100.00 -> 110.00; result total 220.00.
+PASS History shows QA Manager, timestamp, reason, previous/new room IDs, dates and rate, plus standard reference rate.
+Screenshots: multiple_review.png, amendment_form.png, amendment_history.png. All use synthetic test data.
+The temporary QA server/schema was stopped and removed after verification.

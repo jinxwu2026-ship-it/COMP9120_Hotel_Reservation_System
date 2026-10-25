@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}Register contact{% endblock %}
+{% block content %}<div class="page-heading"><div><p class="eyebrow">BOOKING CONTACT</p><h1>Register a booking contact.</h1><p class="muted">The booking contact may not be staying. Names and phone numbers do not have to be unique.</p></div></div><form method="post" class="panel stack narrow"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label>Name<input name="name" required maxlength="120" autocomplete="name"></label><label>Phone<input name="phone" required maxlength="80" autocomplete="tel"></label><label>Email · optional<input name="email" type="email" maxlength="200" autocomplete="email"></label><button>Save contact →</button></form>{% endblock %}

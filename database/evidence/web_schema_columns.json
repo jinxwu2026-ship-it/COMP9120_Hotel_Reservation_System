@@ -1,0 +1,386 @@
+[
+  {
+    "table_name": "guest",
+    "column_name": "guest_id",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "YES",
+    "column_default": null
+  },
+  {
+    "table_name": "guest",
+    "column_name": "name",
+    "data_type": "text",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "guest",
+    "column_name": "email",
+    "data_type": "text",
+    "is_nullable": "YES",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "guest",
+    "column_name": "phone",
+    "data_type": "text",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation",
+    "column_name": "reservation_id",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "YES",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation",
+    "column_name": "guest_id",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation",
+    "column_name": "room_id",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation",
+    "column_name": "check_in_date",
+    "data_type": "date",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation",
+    "column_name": "check_out_date",
+    "data_type": "date",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation",
+    "column_name": "guest_count",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation",
+    "column_name": "booked_nightly_rate",
+    "data_type": "numeric",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": "CURRENT_TIMESTAMP"
+  },
+  {
+    "table_name": "reservation",
+    "column_name": "status",
+    "data_type": "text",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": "'confirmed'::text"
+  },
+  {
+    "table_name": "reservation",
+    "column_name": "actual_check_in_at",
+    "data_type": "timestamp with time zone",
+    "is_nullable": "YES",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation",
+    "column_name": "actual_check_out_at",
+    "data_type": "timestamp with time zone",
+    "is_nullable": "YES",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation",
+    "column_name": "previous_reservation_id",
+    "data_type": "integer",
+    "is_nullable": "YES",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation_audit",
+    "column_name": "audit_id",
+    "data_type": "bigint",
+    "is_nullable": "NO",
+    "is_identity": "YES",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation_audit",
+    "column_name": "reservation_id",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation_audit",
+    "column_name": "staff_id",
+    "data_type": "integer",
+    "is_nullable": "YES",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation_audit",
+    "column_name": "source",
+    "data_type": "text",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation_audit",
+    "column_name": "action",
+    "data_type": "text",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation_audit",
+    "column_name": "occurred_at",
+    "data_type": "timestamp with time zone",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": "clock_timestamp()"
+  },
+  {
+    "table_name": "reservation_audit",
+    "column_name": "reason",
+    "data_type": "text",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": "''::text"
+  },
+  {
+    "table_name": "reservation_audit",
+    "column_name": "before_data",
+    "data_type": "jsonb",
+    "is_nullable": "YES",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation_audit",
+    "column_name": "after_data",
+    "data_type": "jsonb",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation_guest",
+    "column_name": "reservation_guest_id",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "YES",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation_guest",
+    "column_name": "reservation_id",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "reservation_guest",
+    "column_name": "full_name",
+    "data_type": "text",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "room",
+    "column_name": "room_id",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "YES",
+    "column_default": null
+  },
+  {
+    "table_name": "room",
+    "column_name": "room_number",
+    "data_type": "text",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "room",
+    "column_name": "room_type_id",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "room",
+    "column_name": "is_bookable",
+    "data_type": "boolean",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": "true"
+  },
+  {
+    "table_name": "room",
+    "column_name": "housekeeping_status",
+    "data_type": "text",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "room_type",
+    "column_name": "room_type_id",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "YES",
+    "column_default": null
+  },
+  {
+    "table_name": "room_type",
+    "column_name": "type_name",
+    "data_type": "text",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "room_type",
+    "column_name": "max_guests",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "room_type",
+    "column_name": "base_nightly_rate",
+    "data_type": "numeric",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "staff",
+    "column_name": "staff_id",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "YES",
+    "column_default": null
+  },
+  {
+    "table_name": "staff",
+    "column_name": "username",
+    "data_type": "character varying",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "staff",
+    "column_name": "display_name",
+    "data_type": "character varying",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "staff",
+    "column_name": "password_hash",
+    "data_type": "text",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "staff",
+    "column_name": "role",
+    "data_type": "text",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "staff",
+    "column_name": "is_active",
+    "data_type": "boolean",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": "true"
+  },
+  {
+    "table_name": "staff",
+    "column_name": "must_change_password",
+    "data_type": "boolean",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": "true"
+  },
+  {
+    "table_name": "staff",
+    "column_name": "session_version",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": "0"
+  },
+  {
+    "table_name": "staff",
+    "column_name": "failed_attempts",
+    "data_type": "integer",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": "0"
+  },
+  {
+    "table_name": "staff",
+    "column_name": "locked_until",
+    "data_type": "timestamp with time zone",
+    "is_nullable": "YES",
+    "is_identity": "NO",
+    "column_default": null
+  },
+  {
+    "table_name": "staff",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone",
+    "is_nullable": "NO",
+    "is_identity": "NO",
+    "column_default": "CURRENT_TIMESTAMP"
+  }
+]

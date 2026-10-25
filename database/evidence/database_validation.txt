@@ -1,0 +1,94 @@
+comp9120_hotel_test|PostgreSQL 16.14, compiled by Visual C++ build 1944, 64-bit|2026-10-25 15:26:45.854717+11|Australia/Sydney
+
+CONSTRAINTS
+P01 zero price allowed|PASS
+P02 nullable duplicate contacts allowed|PASS
+P03 same-name occupants allowed|PASS
+P04 defaults|PASS
+C01 guest PK|PASS 23505
+C02 name required|PASS 23502
+C03 blank name|PASS 23514
+C04 phone required|PASS 23502
+C05 whitespace phone|PASS 23514
+C06 type unique|PASS 23505
+C07 capacity positive|PASS 23514
+C08 base price nonnegative|PASS 23514
+C09 finite base price|PASS 23514
+C10 room number unique|PASS 23505
+C11 room type FK|PASS 23503
+C12 cleaning explicit|PASS 23502
+C13 cleaning domain|PASS 23514
+C14 guest FK|PASS 23503
+C15 room FK|PASS 23503
+C16 predecessor FK|PASS 23503
+C17 no self link|PASS 23514
+C18 positive nights|PASS 23514
+C19 finite dates|PASS 23514
+C20 party positive|PASS 23514
+C21 agreed price nonnegative|PASS 23514
+C22 finite agreed price|PASS 23514
+C23 status domain|PASS 23514
+C24 status required|PASS 23502
+C25 arrival time required|PASS 23514
+C26 confirmed has no actual time|PASS 23514
+C27 cancelled has no actual time|PASS 23514
+C28 departure time required|PASS 23514
+C29 actual time order|PASS 23514
+C30 occupant FK|PASS 23503
+C31 occupant nonblank|PASS 23514
+C32 contact deletion restricted|PASS 23503
+C33 type deletion restricted|PASS 23503
+C34 room deletion restricted|PASS 23503
+C35 reservation deletion restricted|PASS 23503
+C36 one noncancelled successor|PASS 23505
+P05 cancelled successor retry allowed|PASS
+C37 one actual occupant reservation|PASS 23505
+P06 valid actual timestamps|PASS
+B01 capacity and overlap are service boundaries|CONFIRMED BOUNDARY
+43|1
+
+PARAMETERISED SQL TEMPLATES
+PASS clock [GET_HOTEL_CLOCK]: [{"hotel_now": "2026-10-25T15:26:46.119207+11:00", "hotel_today": "2026-10-25"}]
+PASS new contact [ADD_GUEST]: [{"guest_id": 6}]
+PASS room types [LIST_TYPES]: [{"room_type_id": 1, "type_name": "Single", "max_guests": 1, "base_nightly_rate": 120.0}, {"room_type_id": 2, "type_name": "Double", "max_guests": 2, "base_nightly_rate": 180.0}, {"room_type_id": 3, "type_name": "Family", "max_guests": 4, "base_nightly_rate": 240.0}]
+PASS rooms [LIST_ROOMS]: [{"room_id": 1, "room_number": "101", "room_type_id": 1, "type_name": "Single", "max_guests": 1, "base_nightly_rate": 120.0, "is_bookable": true, "housekeeping_status": "clean"}, {"room_id": 2, "room_number": "102", "room_type_id": 1, "type_name": "Single", "max_guests": 1, "base_nightly_rate": 120.0, "is_bookable": true, "housekeeping_status": "dirty"}, {"room_id": 3, "room_number": "201", "room_type_id": 2, "type_name": "Double", "max_guests": 2, "base_nightly_rate": 180.0, "is_bookable": true, "housekeeping_status": "clean"}, {"room_id": 4, "room_number": "202", "room_type_id": 2, "type_name": "Double", "max_guests": 2, "base_nightly_rate": 180.0, "is_bookable": true, "housekeeping_status": "dirty"}, {"room_id": 5, "room_number": "301", "room_type_id": 3, "type_name": "Family", "max_guests": 4, "base_nightly_rate": 240.0, "is_bookable": true, "housekeeping_status": "clean"}, {"room_id": 6, "room_number": "302", "room_type_id": 3, "type_name": "Family", "max_guests": 4, "base_nightly_rate": 240.0, "is_bookable": false, "housekeeping_status": "cleaning"}]
+PASS availability and cancelled history [FIND_ROOMS]: [{"room_id": 3, "room_number": "201", "room_type_id": 2, "type_name": "Double", "max_guests": 2, "base_nightly_rate": 180.0}, {"room_id": 4, "room_number": "202", "room_type_id": 2, "type_name": "Double", "max_guests": 2, "base_nightly_rate": 180.0}]
+PASS invalid date availability [FIND_ROOMS]: []
+PASS type and capacity filter [FIND_ROOMS]: []
+PASS room lock order [LOCK_ROOMS]: [{"room_id": 3}, {"room_id": 5}]
+PASS reservation lock order [LOCK_RESERVATIONS]: [{"reservation_id": 1001}, {"reservation_id": 1003}]
+PASS room details [GET_ROOM]: [{"room_id": 3, "room_number": "201", "room_type_id": 2, "type_name": "Double", "max_guests": 2, "base_nightly_rate": 180.0, "is_bookable": true, "housekeeping_status": "clean"}]
+PASS reservation details [GET_RESERVATION]: [{"reservation_id": 1001, "guest_id": 1, "room_id": 3, "check_in_date": "2026-10-24", "check_out_date": "2026-10-26", "guest_count": 2, "booked_nightly_rate": 180.0, "created_at": "2026-10-25T15:26:45.40688+11:00", "status": "checked_in", "actual_check_in_at": "2026-10-24T14:00:00+11:00", "actual_check_out_at": null, "previous_reservation_id": null}]
+PASS overlap detection [ROOM_DATE_CONFLICTS]: [{"reservation_id": 1001, "check_in_date": "2026-10-24", "check_out_date": "2026-10-26", "status": "checked_in"}]
+PASS adjacent dates [ROOM_DATE_CONFLICTS]: []
+PASS physical occupant [CURRENT_OCCUPANTS]: [{"reservation_id": 1013}]
+PASS same-room predecessor exception [CURRENT_OCCUPANTS]: []
+PASS insert and amount [INSERT_RESERVATION]: [{"reservation_id": 1016, "booked_nightly_rate": 120.0, "total_amount": 240.0, "status": "confirmed"}]
+PASS all contact states [PERSONAL_RESERVATIONS]: [{"reservation_id": 1012, "room_number": "301", "type_name": "Family", "check_in_date": "2026-10-26", "check_out_date": "2026-10-28", "guest_count": 2, "booked_nightly_rate": 240.0, "total_amount": 480.0, "status": "cancelled", "actual_check_in_at": null, "actual_check_out_at": null, "previous_reservation_id": 1001}, {"reservation_id": 1009, "room_number": "201", "type_name": "Double", "check_in_date": "2026-10-28", "check_out_date": "2026-10-30", "guest_count": 2, "booked_nightly_rate": 180.0, "total_amount": 360.0, "status": "confirmed", "actual_check_in_at": null, "actual_check_out_at": null, "previous_reservation_id": null}, {"reservation_id": 1002, "room_number": "301", "type_name": "Family", "check_in_date": "2026-10-26", "check_out_date": "2026-10-28", "guest_count": 2, "booked_nightly_rate": 240.0, "total_amount": 480.0, "status": "confirmed", "actual_check_in_at": null, "actual_check_out_at": null, "previous_reservation_id": 1001}, {"reservation_id": 1001, "room_number": "201", "type_name": "Double", "check_in_date": "2026-10-24", "check_out_date": "2026-10-26", "guest_count": 2, "booked_nightly_rate": 180.0, "total_amount": 360.0, "status": "checked_in", "actual_check_in_at": "2026-10-24T14:00:00+11:00", "actual_check_out_at": null, "previous_reservation_id": null}]
+PASS cancellation [CANCEL_RESERVATION]: [{"reservation_id": 1003, "status": "cancelled"}]
+PASS wrong contact cancellation [CANCEL_RESERVATION]: []
+PASS same day cancellation refused [CANCEL_RESERVATION]: []
+PASS add occupant [ADD_STAYING_GUEST]: [{"reservation_guest_id": 13}]
+PASS frozen occupant additions [ADD_STAYING_GUEST]: []
+PASS remove occupant [REMOVE_STAYING_GUEST]: [{"reservation_guest_id": -8001}]
+PASS list occupants [LIST_STAYING_GUESTS]: [{"reservation_guest_id": 1, "full_name": "Bob Chen"}, {"reservation_guest_id": 2, "full_name": "Carol Chen"}]
+PASS copy occupants without moving history [COPY_STAYING_GUESTS]: [{"reservation_guest_id": 16, "full_name": "Bob Chen"}, {"reservation_guest_id": 17, "full_name": "Carol Chen"}]
+PASS copy already populated refused [COPY_STAYING_GUESTS]: []
+PASS check-in update after prerequisites [MARK_CHECKED_IN]: [{"reservation_id": 1010, "status": "checked_in", "actual_check_in_at": "2026-10-25T15:26:51.078683+11:00"}]
+PASS checkout update [MARK_CHECKED_OUT]: [{"reservation_id": 1001, "status": "checked_out", "actual_check_out_at": "2026-10-25T15:26:51.243138+11:00"}]
+PASS open flag independent [SET_ROOM_OPEN]: [{"room_id": 6, "is_bookable": true}]
+PASS cleaning transition [SET_HOUSEKEEPING_STATUS]: [{"room_id": 2, "housekeeping_status": "cleaning"}]
+PASS occupied room cannot be dirtied [SET_HOUSEKEEPING_STATUS]: []
+PASS noncancelled successor [GET_SUCCESSORS]: [{"reservation_id": 1002, "room_id": 5, "check_in_date": "2026-10-26", "check_out_date": "2026-10-28", "status": "confirmed"}]
+PASS extension already exists [EXTENSION_OPTIONS]: []
+PASS extension option order [EXTENSION_OPTIONS]: [{"room_id": 3, "room_number": "201", "room_type_id": 2, "type_name": "Double", "base_nightly_rate": 180.0, "check_in_date": "2026-10-26", "check_out_date": "2026-10-28", "guest_count": 2, "preference": 0}, {"room_id": 4, "room_number": "202", "room_type_id": 2, "type_name": "Double", "base_nightly_rate": 180.0, "check_in_date": "2026-10-26", "check_out_date": "2026-10-28", "guest_count": 2, "preference": 1}, {"room_id": 5, "room_number": "301", "room_type_id": 3, "type_name": "Family", "base_nightly_rate": 240.0, "check_in_date": "2026-10-26", "check_out_date": "2026-10-28", "guest_count": 2, "preference": 2}]
+PASS statistics not multiplied by occupant rows [BOOKING_STATISTICS]: [{"room_type_id": 1, "type_name": "Single", "bookings": 6, "cancelled": 0, "booking_value": 1300.0}, {"room_type_id": 2, "type_name": "Double", "bookings": 4, "cancelled": 1, "booking_value": 1080.0}, {"room_type_id": 3, "type_name": "Family", "bookings": 4, "cancelled": 2, "booking_value": 940.0}]
+
+CONCURRENCY
+PASS Room lock race: 2 independent connections, 1 booking; B waited 2.00s.
+
+ROLLBACK
+PASS injected division-by-zero: checkout and room state unchanged.
+
+SUMMARY: 43 constraint/positive checks + 1 documented boundary; 35 SQL cases; 1 two-connection race; 1 rollback case.
+Not tested: Python driver adaptation, service functions, menus, complete continuation transaction or service acceptance tests.

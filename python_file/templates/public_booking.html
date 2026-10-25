@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Book room {{ room[1] }}{% endblock %}
+{% block content %}
+<a class="back" href="{{ url_for('availability',check_in=start,check_out=end,guests=guests) }}">← Available rooms</a>
+<div class="page-heading"><div><p class="eyebrow">RESERVE YOUR STAY</p><h1>A room for your next chapter.</h1><p class="muted">Book directly with your contact details. No account is required.</p></div></div>
+<div class="detail-grid"><section class="panel"><h2>Your stay</h2><dl>
+<dt>Room</dt><dd>{{ room[1] }} · {{ room[2] }}</dd><dt>Dates</dt><dd>{{ start }} → {{ end }}</dd><dt>Guests</dt><dd>{{ guests }}</dd><dt>Nightly rate</dt><dd>{{ '%.2f'|format(room[4]) }}</dd><dt>Stay total</dt><dd>{{ '%.2f'|format(room[5]) }}</dd>
+</dl><p class="hint">Availability and the quoted price are checked again when you confirm. No payment is collected through this prototype. Reception will register the staying guests before check-in.</p></section>
+<form method="post" class="panel stack" data-confirm="Confirm this reservation at the displayed room, dates and total?">
+<h2>Booking contact</h2><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="room_id" value="{{ room[0] }}"><input type="hidden" name="check_in" value="{{ start }}"><input type="hidden" name="check_out" value="{{ end }}"><input type="hidden" name="guests" value="{{ guests }}"><input type="hidden" name="quoted_base" value="{{ room[4] }}">
+<label>Full name<input name="name" autocomplete="name" maxlength="120" required></label>
+<label>Phone number<input type="tel" name="phone" autocomplete="tel" maxlength="60" required></label>
+<label>Email (optional)<input type="email" name="email" autocomplete="email" maxlength="254"></label>
+<p class="hint">The booking contact may be different from the people staying. Your contact details are not shown in public room searches.</p>
+<button>Confirm reservation →</button></form></div>
+{% endblock %}

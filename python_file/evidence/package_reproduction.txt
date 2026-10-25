@@ -1,0 +1,118 @@
+Package reproduction: 2026-10-25 Australia/Sydney
+Executed extracted ZIP source, using installed Python/psycopg2 and local PostgreSQL.
+Authentication supplied separately through environment; not included in ZIP.
+This is not a clean-OS installation or a second-computer test.
+
+tianyishen/test_web.py
+
+test_cli_staff_adapter_enforces_authentication_and_manager_permission (__main__.WebTests.test_cli_staff_adapter_enforces_authentication_and_manager_permission) ... ok
+test_concurrent_manager_disables_preserve_an_active_manager (__main__.WebTests.test_concurrent_manager_disables_preserve_an_active_manager) ... ok
+test_contact_creation_roster_removal_and_cancellation (__main__.WebTests.test_contact_creation_roster_removal_and_cancellation) ... ok
+test_csrf_rejects_login_and_every_write_and_host_is_restricted (__main__.WebTests.test_csrf_rejects_login_and_every_write_and_host_is_restricted) ... ok
+test_disable_revokes_session_and_last_manager_cannot_be_disabled (__main__.WebTests.test_disable_revokes_session_and_last_manager_cannot_be_disabled) ... ok
+test_http_booking_roster_checkin_checkout_and_cleaning (__main__.WebTests.test_http_booking_roster_checkin_checkout_and_cleaning) ... ok
+test_http_continuation_quote_activation_and_atomic_rollback (__main__.WebTests.test_http_continuation_quote_activation_and_atomic_rollback) ... [2026-10-25 11:07:15,740] ERROR in web: Database operation failed; SQLSTATE=22012
+ok
+test_invalid_input_and_invalid_actions_do_not_write (__main__.WebTests.test_invalid_input_and_invalid_actions_do_not_write) ... ok
+test_logout_revokes_replayed_cookie_and_sensitive_pages_not_cached (__main__.WebTests.test_logout_revokes_replayed_cookie_and_sensitive_pages_not_cached) ... ok
+test_manager_staff_creation_hash_force_password_change_and_reset (__main__.WebTests.test_manager_staff_creation_hash_force_password_change_and_reset) ... ok
+test_public_search_no_private_data_and_all_staff_routes_require_login (__main__.WebTests.test_public_search_no_private_data_and_all_staff_routes_require_login) ... ok
+test_reception_cannot_manage_staff_or_room_open_but_can_clean (__main__.WebTests.test_reception_cannot_manage_staff_or_room_open_but_can_clean) ... ok
+test_staff_pages_render_and_escape_guest_input (__main__.WebTests.test_staff_pages_render_and_escape_guest_input) ... ok
+test_wrong_password_lockout_and_parameter_binding (__main__.WebTests.test_wrong_password_lockout_and_parameter_binding) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 18.018s
+
+OK
+
+Exit code: 0
+
+tianyishen/test_integration.py
+
+test_all_28_sql_interfaces_match_requirement (__main__.ServiceIntegrationTests.test_all_28_sql_interfaces_match_requirement) ... ok
+test_booking_validation_and_price_snapshot (__main__.ServiceIntegrationTests.test_booking_validation_and_price_snapshot) ... ok
+test_cancellation_ownership_deadline_and_history (__main__.ServiceIntegrationTests.test_cancellation_ownership_deadline_and_history) ... ok
+test_checkout_failure_rolls_back_both_updates (__main__.ServiceIntegrationTests.test_checkout_failure_rolls_back_both_updates) ... ok
+test_concurrent_bookings_only_one_success (__main__.ServiceIntegrationTests.test_concurrent_bookings_only_one_success) ... ok
+test_concurrent_extensions_only_one_successor (__main__.ServiceIntegrationTests.test_concurrent_extensions_only_one_successor) ... ok
+test_connection_readonly_and_execution_time (__main__.ServiceIntegrationTests.test_connection_readonly_and_execution_time) ... ok
+test_contacts_types_and_result_shapes (__main__.ServiceIntegrationTests.test_contacts_types_and_result_shapes) ... ok
+test_continuation_activation_window_dirty_target_and_quote_change (__main__.ServiceIntegrationTests.test_continuation_activation_window_dirty_target_and_quote_change) ... ok
+test_dirty_closed_and_physically_occupied_arrivals_refused (__main__.ServiceIntegrationTests.test_dirty_closed_and_physically_occupied_arrivals_refused) ... ok
+test_dirty_continuation_target_preserves_old_stay (__main__.ServiceIntegrationTests.test_dirty_continuation_target_preserves_old_stay) ... ok
+test_room_change_and_quote_preference (__main__.ServiceIntegrationTests.test_room_change_and_quote_preference) ... ok
+test_room_change_failure_rolls_back_all_updates (__main__.ServiceIntegrationTests.test_room_change_failure_rolls_back_all_updates) ... ok
+test_roster_arrival_checkout_and_cleaning_lifecycle (__main__.ServiceIntegrationTests.test_roster_arrival_checkout_and_cleaning_lifecycle) ... ok
+test_same_room_continuation_keeps_room_clean_and_roster_history (__main__.ServiceIntegrationTests.test_same_room_continuation_keeps_room_clean_and_roster_history) ... ok
+test_search_overlap_adjacency_capacity_and_dirty_future_room (__main__.ServiceIntegrationTests.test_search_overlap_adjacency_capacity_and_dirty_future_room) ... ok
+test_staff_exact_search_all_and_duplicate_phone (__main__.ServiceIntegrationTests.test_staff_exact_search_all_and_duplicate_phone) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 10.866s
+
+OK
+
+Exit code: 0
+
+tianyishen/test_booking_changes.py
+
+test_amend_conflict_capacity_closed_price_and_stale_leave_original (__main__.BookingChangeTests.test_amend_conflict_capacity_closed_price_and_stale_leave_original) ... ok
+test_amend_preserves_id_and_roster_releases_previous_allocation (__main__.BookingChangeTests.test_amend_preserves_id_and_roster_releases_previous_allocation) ... ok
+test_amendment_policy_and_continuation_history (__main__.BookingChangeTests.test_amendment_policy_and_continuation_history) ... ok
+test_audit_failure_rolls_back_amendment_and_entire_batch (__main__.BookingChangeTests.test_audit_failure_rolls_back_amendment_and_entire_batch) ... ok
+test_batch_conflict_preserves_only_existing_booking (__main__.BookingChangeTests.test_batch_conflict_preserves_only_existing_booking) ... ok
+test_batch_invalid_room_duplicate_capacity_price_and_discount_are_atomic (__main__.BookingChangeTests.test_batch_invalid_room_duplicate_capacity_price_and_discount_are_atomic) ... ok
+test_batch_success_per_room_prices_and_separate_reservations (__main__.BookingChangeTests.test_batch_success_per_room_prices_and_separate_reservations) ... ok
+test_changed_roster_invalidates_open_form (__main__.BookingChangeTests.test_changed_roster_invalidates_open_form) ... ok
+test_concurrent_amendment_and_booking_recheck_target (__main__.BookingChangeTests.test_concurrent_amendment_and_booking_recheck_target) ... ok
+test_concurrent_amendments_do_not_overwrite_each_other (__main__.BookingChangeTests.test_concurrent_amendments_do_not_overwrite_each_other) ... ok
+test_concurrent_batch_and_single_booking_do_not_double_sell (__main__.BookingChangeTests.test_concurrent_batch_and_single_booking_do_not_double_sell) ... ok
+test_continuation_discount_is_manager_only_and_copied_rate_is_fixed (__main__.BookingChangeTests.test_continuation_discount_is_manager_only_and_copied_rate_is_fixed) ... ok
+test_manager_discount_rules_and_staff_session_revalidation (__main__.BookingChangeTests.test_manager_discount_rules_and_staff_session_revalidation) ... ok
+test_missing_actor_and_disabled_actor_cannot_use_new_writes (__main__.BookingChangeTests.test_missing_actor_and_disabled_actor_cannot_use_new_writes) ... ok
+test_roster_cancel_and_continuation_actions_are_attributed (__main__.BookingChangeTests.test_roster_cancel_and_continuation_actions_are_attributed) ... ok
+test_same_room_overlap_excludes_self_and_unchanged_keeps_discount (__main__.BookingChangeTests.test_same_room_overlap_excludes_self_and_unchanged_keeps_discount) ... ok
+test_modify_page_history_and_forged_actor (__main__.BookingChangeWebTests.test_modify_page_history_and_forged_actor) ... ok
+test_http_multiple_review_confirm_and_tampered_discount (__main__.BookingChangeWebTests.test_http_multiple_review_confirm_and_tampered_discount) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 15.938s
+
+OK
+
+Exit code: 0
+
+tianyishen/test_public_booking.py
+
+test_public_booking_reuses_guest_table_and_marks_unverified_source (__main__.PublicBookingTests.test_public_booking_reuses_guest_table_and_marks_unverified_source) ... ok
+test_public_conflict_stale_price_bad_contact_and_csrf_do_not_create_contacts (__main__.PublicBookingTests.test_public_conflict_stale_price_bad_contact_and_csrf_do_not_create_contacts) ... ok
+test_public_audit_failure_rolls_back_new_contact_and_reservation (__main__.PublicBookingTests.test_public_audit_failure_rolls_back_new_contact_and_reservation) ... ok
+test_existing_guest_id_does_not_grant_customer_access (__main__.PublicBookingTests.test_existing_guest_id_does_not_grant_customer_access) ... ok
+test_english_calendar_markup_and_strict_server_dates (__main__.PublicBookingTests.test_english_calendar_markup_and_strict_server_dates) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 4.180s
+
+OK
+
+Exit code: 0
+
+database/verify_expanded_data.py
+PASS: capacity
+PASS: active date overlaps
+PASS: historical planned overlaps
+PASS: actual occupancy overlaps
+PASS: new roster completeness
+PASS: continuation boundary and contact
+PASS: historical handover time
+PASS: occupied room ready
+PASS: new actual times and creation order
+PASS: all new contacts used
+PASS: repeated import rejected and rolled back without row changes
+PASS: service lists, overlap rejection, generated ID, booking and cancellation
+Totals before disposable service write: {'guest': 50, 'room_type': 8, 'room': 40, 'reservation': 200, 'reservation_guest': 351}
+PASS: original rows preserved; only disposable test schema was modified
+
+
+Exit code: 0

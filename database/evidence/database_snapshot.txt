@@ -1,0 +1,63 @@
+         observed_at          | current_database | current_setting  
+------------------------------+------------------+------------------
+ 2026-10-24 04:33:10.33622+11 | comp9120_hotel   | Australia/Sydney
+(1 row)
+
+     relation      | count 
+-------------------+-------
+ guest             |     4
+ room_type         |     3
+ room              |     6
+ reservation       |    14
+ reservation_guest |    11
+(5 rows)
+
+     relation      |                 conname                  |                                                                                                                                                                                                                                                        definition                                                                                                                                                                                                                                                        
+-------------------+------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ guest             | guest_name_check                         | CHECK ((name ~ '[^[:space:]]'::text))
+ guest             | guest_phone_check                        | CHECK ((phone ~ '[^[:space:]]'::text))
+ guest             | guest_pkey                               | PRIMARY KEY (guest_id)
+ reservation       | reservation_actual_times                 | CHECK ((((status = ANY (ARRAY['confirmed'::text, 'cancelled'::text])) AND (actual_check_in_at IS NULL) AND (actual_check_out_at IS NULL)) OR ((status = 'checked_in'::text) AND (actual_check_in_at IS NOT NULL) AND isfinite(actual_check_in_at) AND (actual_check_out_at IS NULL)) OR ((status = 'checked_out'::text) AND (actual_check_in_at IS NOT NULL) AND isfinite(actual_check_in_at) AND (actual_check_out_at IS NOT NULL) AND isfinite(actual_check_out_at) AND (actual_check_out_at >= actual_check_in_at))))
+ reservation       | reservation_booked_nightly_rate_check    | CHECK (((booked_nightly_rate >= (0)::numeric) AND (booked_nightly_rate <> 'NaN'::numeric)))
+ reservation       | reservation_check_in_date_check          | CHECK (isfinite(check_in_date))
+ reservation       | reservation_check_out_date_check         | CHECK (isfinite(check_out_date))
+ reservation       | reservation_created_at_check             | CHECK (isfinite(created_at))
+ reservation       | reservation_date_order                   | CHECK ((check_out_date > check_in_date))
+ reservation       | reservation_guest_count_check            | CHECK ((guest_count > 0))
+ reservation       | reservation_guest_id_fkey                | FOREIGN KEY (guest_id) REFERENCES guest(guest_id) ON DELETE RESTRICT
+ reservation       | reservation_not_self                     | CHECK ((previous_reservation_id <> reservation_id))
+ reservation       | reservation_pkey                         | PRIMARY KEY (reservation_id)
+ reservation       | reservation_previous_reservation_id_fkey | FOREIGN KEY (previous_reservation_id) REFERENCES reservation(reservation_id) ON DELETE RESTRICT
+ reservation       | reservation_room_id_fkey                 | FOREIGN KEY (room_id) REFERENCES room(room_id) ON DELETE RESTRICT
+ reservation       | reservation_status_check                 | CHECK ((status = ANY (ARRAY['confirmed'::text, 'cancelled'::text, 'checked_in'::text, 'checked_out'::text])))
+ reservation_guest | reservation_guest_full_name_check        | CHECK ((full_name ~ '[^[:space:]]'::text))
+ reservation_guest | reservation_guest_pkey                   | PRIMARY KEY (reservation_guest_id)
+ reservation_guest | reservation_guest_reservation_id_fkey    | FOREIGN KEY (reservation_id) REFERENCES reservation(reservation_id) ON DELETE RESTRICT
+ room              | room_housekeeping_status_check           | CHECK ((housekeeping_status = ANY (ARRAY['clean'::text, 'dirty'::text, 'cleaning'::text])))
+ room              | room_pkey                                | PRIMARY KEY (room_id)
+ room              | room_room_number_check                   | CHECK ((room_number ~ '[^[:space:]]'::text))
+ room              | room_room_number_key                     | UNIQUE (room_number)
+ room              | room_room_type_id_fkey                   | FOREIGN KEY (room_type_id) REFERENCES room_type(room_type_id) ON DELETE RESTRICT
+ room_type         | room_type_base_nightly_rate_check        | CHECK (((base_nightly_rate >= (0)::numeric) AND (base_nightly_rate <> 'NaN'::numeric)))
+ room_type         | room_type_max_guests_check               | CHECK ((max_guests > 0))
+ room_type         | room_type_pkey                           | PRIMARY KEY (room_type_id)
+ room_type         | room_type_type_name_check                | CHECK ((type_name ~ '[^[:space:]]'::text))
+ room_type         | room_type_type_name_key                  | UNIQUE (type_name)
+(29 rows)
+
+     tablename     |          indexname          |                                                                                         indexdef                                                                                         
+-------------------+-----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ guest             | guest_pkey                  | CREATE UNIQUE INDEX guest_pkey ON public.guest USING btree (guest_id)
+ reservation       | ix_reservation_active_dates | CREATE INDEX ix_reservation_active_dates ON public.reservation USING btree (room_id, check_in_date, check_out_date) WHERE (status = ANY (ARRAY['confirmed'::text, 'checked_in'::text]))
+ reservation       | ix_reservation_contact      | CREATE INDEX ix_reservation_contact ON public.reservation USING btree (guest_id)
+ reservation       | reservation_pkey            | CREATE UNIQUE INDEX reservation_pkey ON public.reservation USING btree (reservation_id)
+ reservation       | uq_reservation_successor    | CREATE UNIQUE INDEX uq_reservation_successor ON public.reservation USING btree (previous_reservation_id) WHERE ((previous_reservation_id IS NOT NULL) AND (status <> 'cancelled'::text))
+ reservation       | uq_room_checked_in          | CREATE UNIQUE INDEX uq_room_checked_in ON public.reservation USING btree (room_id) WHERE (status = 'checked_in'::text)
+ reservation_guest | ix_reservation_guest_parent | CREATE INDEX ix_reservation_guest_parent ON public.reservation_guest USING btree (reservation_id)
+ reservation_guest | reservation_guest_pkey      | CREATE UNIQUE INDEX reservation_guest_pkey ON public.reservation_guest USING btree (reservation_guest_id)
+ room              | room_pkey                   | CREATE UNIQUE INDEX room_pkey ON public.room USING btree (room_id)
+ room              | room_room_number_key        | CREATE UNIQUE INDEX room_room_number_key ON public.room USING btree (room_number)
+ room_type         | room_type_pkey              | CREATE UNIQUE INDEX room_type_pkey ON public.room_type USING btree (room_type_id)
+ room_type         | room_type_type_name_key     | CREATE UNIQUE INDEX room_type_type_name_key ON public.room_type USING btree (type_name)
+(12 rows)
+

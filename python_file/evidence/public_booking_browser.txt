@@ -1,0 +1,9 @@
+2026-10-25 Australia/Sydney
+PASS real hotel_app browser flow in a disposable schema on port 8081.
+PASS English calendar: October/November 2026, English weekdays, Today/Clear/Close, disabled earlier dates.
+PASS next-month selection writes 2026-11-01; text inputs show YYYY-MM-DD instead of OS-localized placeholders.
+PASS public availability -> Book this room -> contact form -> confirmed standard-rate reservation.
+PASS synthetic Demo Guest / room 101 / 2026-12-10 to 2026-12-12 / total 240.00.
+No staff sign-in, no reused guest_id, no new customer-account table.
+Screenshots: english_calendar.png, public_booking_form.png, public_booking_receipt.png.
+Temporary QA server and test schema stopped/removed after verification.

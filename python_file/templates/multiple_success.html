@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}Rooms reserved{% endblock %}
+{% block content %}<section class="panel"><p class="eyebrow">ALL ROOMS CONFIRMED</p><h1>Your selected rooms are reserved.</h1><p>Each room has a separate reservation. Complete its staying-guest list before check-in.</p><ul>{% for r in results %}<li><a href="{{ url_for('reservation',reservation_id=r[0]) }}">Reservation #{{ r[0] }}</a> · Nightly {{ '%.2f'|format(r[1]) }} · Total {{ '%.2f'|format(r[2]) }}</li>{% endfor %}</ul><a class="button" href="{{ url_for('reservations') }}">View reservations →</a></section>{% endblock %}

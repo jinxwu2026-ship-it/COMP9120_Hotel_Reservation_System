@@ -1,0 +1,14 @@
+PASS: capacity
+PASS: active date overlaps
+PASS: historical planned overlaps
+PASS: actual occupancy overlaps
+PASS: new roster completeness
+PASS: continuation boundary and contact
+PASS: historical handover time
+PASS: occupied room ready
+PASS: new actual times and creation order
+PASS: all new contacts used
+PASS: repeated import rejected and rolled back without row changes
+PASS: service lists, overlap rejection, generated ID, booking and cancellation
+Totals before disposable service write: {'guest': 50, 'room_type': 8, 'room': 40, 'reservation': 200, 'reservation_guest': 351}
+PASS: original rows preserved; only disposable test schema was modified

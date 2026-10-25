@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Harbour House{% endblock %} · Hotel Staff Portal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='hotel.css') }}">
+  <script defer src="{{ url_for('static', filename='hotel.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='calendar.js') }}"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="topbar">
+  <a class="brand" href="{{ url_for('dashboard' if staff else 'availability') }}"><span class="brand-mark">H</span><span>HARBOUR HOUSE<small>Reservations & Operations</small></span></a>
+  <nav aria-label="Main navigation">
+    {% if staff %}
+    {% for endpoint, label in [('dashboard','Dashboard'),('reservations','Reservations'),('rooms','Rooms'),('availability','Availability')] %}
+    <a {% if request.endpoint == endpoint %}class="active" aria-current="page"{% endif %} href="{{ url_for(endpoint) }}">{{ label }}</a>
+    {% endfor %}
+    {% if staff.role == 'manager' %}<a href="{{ url_for('staff_admin') }}" {% if request.endpoint == 'staff_admin' %}class="active"{% endif %}>Staff management</a>{% endif %}
+    {% else %}<a href="{{ url_for('availability') }}">Find a room</a><a class="button small" href="{{ url_for('login') }}">Staff sign in ↗</a>{% endif %}
+  </nav>
+  {% if staff %}<div class="identity"><a href="{{ url_for('password') }}">{{ staff.display_name }}<small>{{ 'Manager' if staff.role == 'manager' else 'Reception' }} · {{ staff.username }}</small></a><form method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="link" type="submit">Sign out</button></form></div>{% endif %}
+</header>
+<main id="main" class="container">
+{% for category, message in get_flashed_messages(with_categories=true) %}<div class="notice {{ category }}" role="status">{{ message }}</div>{% endfor %}
+{% block content %}{% endblock %}
+</main>
+<footer class="footer"><span>HARBOUR HOUSE <span class="dot">·</span> Local course demonstration</span><span>Hotel time zone: Australia / Sydney</span></footer>
+</body>
+</html>

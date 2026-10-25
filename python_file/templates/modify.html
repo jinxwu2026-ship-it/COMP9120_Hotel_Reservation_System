@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Modify reservation #{{ item.reservation_id }}{% endblock %}
+{% block content %}
+<a class="back" href="{{ url_for('reservation',reservation_id=item.reservation_id) }}">← Reservation #{{ item.reservation_id }}</a>
+<div class="page-heading"><div><p class="eyebrow">MODIFY BEFORE ARRIVAL</p><h1>A new plan for the same stay.</h1><p class="muted">The reservation number, booking contact and guest list are retained.</p></div></div>
+<section class="panel section-gap"><h2>Current reservation</h2><p>Room {{ item.room_number }} · {{ item.type_name }} · {{ item.check_in_date }} → {{ item.check_out_date }} · {{ item.guest_count }} guests</p><p>Agreed nightly rate {{ '%.2f'|format(item.rate) }} · Stay total {{ '%.2f'|format(item.amount) }}</p></section>
+<form method="get" class="panel filter-form section-gap">
+  <label>New check-in date<input type="text" data-english-date placeholder="YYYY-MM-DD" inputmode="numeric" maxlength="10" autocomplete="off" name="check_in" value="{{ start }}" required></label>
+  <label>New check-out date<input type="text" data-english-date placeholder="YYYY-MM-DD" inputmode="numeric" maxlength="10" autocomplete="off" name="check_out" value="{{ end }}" required></label>
+  <label>Room type<select name="room_type_id"><option value="">All types</option>{% for t in types %}<option value="{{ t[0] }}" {% if request.args.get('room_type_id')==t[0]|string %}selected{% endif %}>{{ t[1] }}</option>{% endfor %}</select></label>
+  <button>Get new quotes</button>
+</form>
+<p class="muted">New dates: {{ start }} → {{ end }}. A changed room or date uses a new quote. An unchanged submission retains the agreed rate. Manager discounts require a reason.</p>
+<div class="room-grid">
+{% for r in options %}<article class="panel room-body">
+  <p class="eyebrow">AVAILABLE OPTION</p><h2>Room {{ r[1] }} · {{ r[2] }}</h2><p>Up to {{ r[3] }} guests</p>
+  <p class="price">{{ '%.2f'|format(r[4]) }}<small> / night</small></p>
+  <p>Standard stay total {{ '%.2f'|format(r[5]) }}<br>Difference from current total {{ '%+.2f'|format(r[5]-item.amount) }}</p>
+  <form method="post" class="stack" data-confirm="Confirm these dates, room and rate? The previous allocation will be released only after this succeeds.">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="room_id" value="{{ r[0] }}">
+    <input type="hidden" name="check_in" value="{{ start }}"><input type="hidden" name="check_out" value="{{ end }}">
+    <input type="hidden" name="quoted_base" value="{{ r[4] }}"><input type="hidden" name="revision" value="{{ revision }}">
+    {% if staff.role=='manager' %}<label>Optional discounted nightly rate<input type="number" name="discount_rate" min="0" max="{{ r[4] }}" step="0.01" placeholder="Leave blank for the standard quote"></label>{% endif %}
+    <label>Reason for this change<input name="reason" required maxlength="500"></label>
+    <button>Confirm room {{ r[1] }} →</button>
+  </form>
+</article>{% else %}<div class="panel empty">No rooms match these dates, type and guest count.</div>{% endfor %}
+</div>
+{% endblock %}

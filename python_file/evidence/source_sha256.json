@@ -1,0 +1,18 @@
+{
+  "auth.py": "aee774d0a16ae6b4c0426b68edab6800b5850b7e488b5bd9ef4664409b232e65",
+  "db.py": "2df89665e11db06308bff5182ff9424407cf5cf45937e809ac8dfeb1e58c818e",
+  "main.py": "ce02a4ae00ad3b4e71ca5b7c9cf4b52b5fe506c8fba1df9b9139b20cab09c92f",
+  "queries.py": "c3ac5a5a2068fbbdfc651d4aa1e5e6fb486e45239470a1b7b457f08b393964ef",
+  "README.md": "d6cedf32d468cb1a9bf3602bfa590a5d410e4eb2d2084335a53652ad63b42dbe",
+  "requirements.txt": "99b05b12324eaf721763dd494125b845f1624ca62466568ce2bab9b0003139b4",
+  "run_web.py": "d2112f5de4060dc7c2e7b57d32ab9bf680a22fbb8e552575f33527ab332a6556",
+  "service.py": "fb56909aecd0c37b0b4b838266b9ebafdf5225e5d1c1a7bf8f4a4d49e05275af",
+  "setup_web.py": "225a7d19651ec386f4f3b28099317c277f1bd16d446b28ca607c15fe2f7dcbcc",
+  "SQL_queries requirement.txt": "4587b658494be0f998938607b154daae57346b60fe8f7417cd571726b3dcdf3a",
+  "test_booking_changes.py": "52c51c9b52a01b5d4461e1bb0c09a577391abf495a89efe628d72dbf34249b16",
+  "test_calendar.cjs": "27b5a80b177206251e51d02bc0a55b55ec6476eab6da2108d152e913ab9714d9",
+  "test_integration.py": "848994fc43203206505e8cc7a5f1f65f9c1168b160c11d1ad36b7ffdcd88357d",
+  "test_public_booking.py": "a0df08791a90767c14ee4043c9e7a9c85a9d1fdc600c2596eabd29e4e56b90e0",
+  "test_web.py": "7e6368e72ea4fe295ca714153265b007b32d325e8d5deac4aa122516bed99887",
+  "web.py": "f24ce653d1367e381bb3015bd18d1e5e7ea08f7cd74b5522eef3a729caaffafa"
+}

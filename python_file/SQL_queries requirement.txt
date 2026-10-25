@@ -1,0 +1,465 @@
+﻿COMP9120 queries.py 对接清单 / Bilingual SQL Interface
+版本 / Version: 2026-10-24；对应当前可运行的四文件程序 / Matches the current four-file application.
+
+一、交付内容 / Deliverable
+Jinxing 提供一个 queries.py，包含下列 28 个同名 SQL 字符串变量；这些名称不是 Python 函数。
+Jinxing supplies one queries.py containing the 28 exact SQL string variable names below, not Python functions.
+保持变量名、%s 参数数量和顺序、返回列顺序、无结果时的返回行为。SQL 内部可按最终表结构调整。
+Preserve names, positional placeholder counts/order, result column order and empty-result behavior; adapt internal SQL to the final schema.
+代码及注释继续使用英文。此清单的中文只用于解释；不要求把中文写入程序。
+Keep application code and comments in English; Chinese in this document is explanatory only.
+本清单不附 SQL 实现，也不改变现有工作代码。/ No SQL implementations are included, and the working code is unchanged.
+
+二、共同约定 / Shared conventions
+1. 下方输入顺序是 SQL 中每个 %s 的顺序，不一定等于 service 函数的参数顺序；重复值也要保留。
+   Inputs follow each SQL %s position, not necessarily the public service argument order; repeated inputs are intentional.
+2. 返回列按从左到右排列，Python 下标从 0 开始；返回字段名的别名可调整，但位置和类型不能自行改变。
+   Columns are positional, starting at Python index 0; SQL aliases may differ, but positions and types must remain compatible.
+3. 使用 psycopg2 的独立参数绑定，不拼接用户输入。/ Use separate psycopg2 parameter binding, without concatenating user input.
+4. queries.py 只保存 SQL，不连接数据库、不接收菜单输入、不提交或回滚。service.py 负责这些操作。
+   queries.py stores SQL only; service.py owns connections, rule checks, locks, commits and rollbacks.
+5. 普通读取语句用于只读事务，不得附加更新锁；LOCK_ROOM 和 LOCK_RESERVATION 必须保留相应行锁。
+   Ordinary reads run in read-only transactions; the two LOCK statements must preserve their respective row-update locks.
+6. 日期为 date，金额为 Decimal 对应的 numeric，开放状态为 bool，实际时间为带时区 datetime。
+   Types: planned dates = date; money = numeric/Decimal; open flags = bool; actual times = timezone-aware datetime.
+   None = SQL NULL；空字符串 "" 与 None 不同。/ None means SQL NULL; an empty string is a different value.
+
+三、逐项接口 / SQL interfaces
+
+1. GET_TODAY — 获取酒店当前日期
+输入 / Inputs: 无 / none (0 placeholders).
+返回 / Result: Exactly one row: (hotel_today: date,).
+返回行数说明：固定返回一行、一个日期值。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] hotel_today / 酒店当前日期
+行为：取得执行这条语句时的悉尼当前日期；即使之前等待了锁，也应取得等待结束后的日期。
+Behavior: Return the current Sydney calendar date at statement execution time, including after a lock wait.
+
+2. EVENT_TIME — 获取实际操作时间
+输入 / Inputs: 无 / none (0 placeholders).
+返回 / Result: Exactly one row: (event_time: timezone-aware datetime,).
+返回行数说明：固定返回一行、一个带时区的时间值。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] event_time / 实际操作时间
+行为：取得语句执行时的真实当前时间；接续激活时，旧单结束和新单开始共用服务层取得的同一个时间值。
+Behavior: Return the actual current timestamp at execution time. Continuation activation uses one timestamp for both transitions.
+
+3. LIST_TYPES — 查看全部房型
+输入 / Inputs: 无 / none (0 placeholders).
+返回 / Result: Zero or more rows: (room_type_id, type_name, max_guests, base_nightly_rate).
+返回行数说明：返回零行或多行。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] room_type_id / 房型编号
+  [1] type_name / 房型名称
+  [2] max_guests / 房型最大容量
+  [3] base_nightly_rate / 房型基础每晚价
+行为：列出所有房型，按房型编号升序排列。
+Behavior: List all room types ordered by room_type_id.
+
+4. LIST_ROOMS — 查看全部客房
+输入 / Inputs: 无 / none (0 placeholders).
+返回 / Result: Zero or more rows: (room_id, room_number, type_name, max_guests, base_nightly_rate, is_bookable, housekeeping_status).
+返回行数说明：返回零行或多行。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] room_id / 房间内部编号
+  [1] room_number / 门牌号
+  [2] type_name / 房型名称
+  [3] max_guests / 房型最大容量
+  [4] base_nightly_rate / 房型基础每晚价
+  [5] is_bookable / 是否接受新预订
+  [6] housekeeping_status / 清洁状态
+行为：包含开放、关闭、干净或待清洁的全部客房，按房间内部编号升序排列；不是按日期查空房。
+Behavior: List all rooms, including closed and dirty rooms, ordered by room_id.
+
+5. GET_ROOM — 读取一间客房
+输入 / Inputs (1 个 %s / placeholders; ordered):
+  1) room_id: int / 房间内部编号
+返回 / Result: Zero or one row: (room_id, room_number, room_type_id, is_bookable, housekeeping_status, max_guests, base_nightly_rate, type_name).
+返回行数说明：存在时返回一行，不存在时不返回行。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] room_id / 房间内部编号
+  [1] room_number / 门牌号
+  [2] room_type_id / 房型编号
+  [3] is_bookable / 是否接受新预订
+  [4] housekeeping_status / 清洁状态
+  [5] max_guests / 房型最大容量
+  [6] base_nightly_rate / 房型基础每晚价
+  [7] type_name / 房型名称
+行为：读取客房和对应房型资料，不加写锁；这条语句也会在只读事务中使用。
+Behavior: Read one room with its room-type data. No write lock; this is also called in read-only transactions.
+
+6. LOCK_ROOM — 读取并锁定一间客房
+输入 / Inputs (1 个 %s / placeholders; ordered):
+  1) room_id: int / 房间内部编号
+返回 / Result: Zero or one row: (room_id, room_number, room_type_id, is_bookable, housekeeping_status, max_guests, base_nightly_rate, type_name).
+返回行数说明：存在时返回一行，不存在时不返回行；列顺序与 GET_ROOM 一致。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] room_id / 房间内部编号
+  [1] room_number / 门牌号
+  [2] room_type_id / 房型编号
+  [3] is_bookable / 是否接受新预订
+  [4] housekeeping_status / 清洁状态
+  [5] max_guests / 房型最大容量
+  [6] base_nightly_rate / 房型基础每晚价
+  [7] type_name / 房型名称
+行为：对选中的 room 记录加行级更新锁，直到调用方提交或回滚；必须保留加锁行为。
+Behavior: Same result as GET_ROOM, but lock the selected room row for update until caller commit or rollback. Preserve this locking behavior.
+
+7. GET_RESERVATION — 读取一笔订单
+输入 / Inputs (1 个 %s / placeholders; ordered):
+  1) reservation_id: int / 订单编号
+返回 / Result: Zero or one row: (reservation_id, guest_id, room_id, check_in_date, check_out_date, guest_count, booked_nightly_rate, status, actual_check_in_at, actual_check_out_at, previous_reservation_id).
+返回行数说明：存在时返回一行，不存在时不返回行。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] reservation_id / 订单编号
+  [1] guest_id / 预订联系人编号
+  [2] room_id / 房间内部编号
+  [3] check_in_date / 计划入住日期
+  [4] check_out_date / 计划离店日期
+  [5] guest_count / 预订人数
+  [6] booked_nightly_rate / 保存的每晚成交价
+  [7] status / 订单状态
+  [8] actual_check_in_at / 实际入住时间
+  [9] actual_check_out_at / 实际退房时间
+  [10] previous_reservation_id / 前段订单编号
+行为：读取订单，不加写锁；也用于只读事务。
+Behavior: Read one reservation without a write lock; also used in read-only transactions.
+
+8. LOCK_RESERVATION — 读取并锁定一笔订单
+输入 / Inputs (1 个 %s / placeholders; ordered):
+  1) reservation_id: int / 订单编号
+返回 / Result: Zero or one row: (reservation_id, guest_id, room_id, check_in_date, check_out_date, guest_count, booked_nightly_rate, status, actual_check_in_at, actual_check_out_at, previous_reservation_id).
+返回行数说明：存在时返回一行，不存在时不返回行；列顺序与 GET_RESERVATION 一致。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] reservation_id / 订单编号
+  [1] guest_id / 预订联系人编号
+  [2] room_id / 房间内部编号
+  [3] check_in_date / 计划入住日期
+  [4] check_out_date / 计划离店日期
+  [5] guest_count / 预订人数
+  [6] booked_nightly_rate / 保存的每晚成交价
+  [7] status / 订单状态
+  [8] actual_check_in_at / 实际入住时间
+  [9] actual_check_out_at / 实际退房时间
+  [10] previous_reservation_id / 前段订单编号
+行为：锁定该订单记录，直到服务层提交或回滚；必须保留加锁行为。
+Behavior: Same result as GET_RESERVATION, but lock the reservation row for update until caller commit or rollback.
+
+9. GET_RES_ROOM — 查订单对应的房间编号
+输入 / Inputs (1 个 %s / placeholders; ordered):
+  1) reservation_id: int / 订单编号
+返回 / Result: Zero or one row: (room_id,).
+返回行数说明：存在时返回一行、一个 room_id；不存在时不返回行。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] room_id / 房间内部编号
+行为：先取得房间编号，让服务层可以先锁房间，再锁订单。
+Behavior: Find the reservation room so the service can lock the room before the reservation.
+
+10. GET_GUEST — 读取预订联系人
+输入 / Inputs (1 个 %s / placeholders; ordered):
+  1) guest_id: int / 预订联系人编号
+返回 / Result: Zero or one row: (guest_id, name, email, phone).
+返回行数说明：存在时返回一行，不存在时不返回行。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] guest_id / 预订联系人编号
+  [1] name / 联系人姓名
+  [2] email / 联系人邮箱
+  [3] phone / 联系人电话
+行为：根据 Guest ID 读取联系人；邮箱可以为空。
+Behavior: Read a booking contact; email may be NULL.
+
+11. INSERT_GUEST — 登记预订联系人
+输入 / Inputs (3 个 %s / placeholders; ordered):
+  1) name: str / 联系人姓名
+  2) email: str or None / 联系人邮箱（允许 None）
+  3) phone: str / 联系人电话
+返回 / Result: Exactly one inserted row: (guest_id,).
+返回行数说明：返回一行，包含新生成的 guest_id。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] guest_id / 预订联系人编号
+行为：插入姓名、邮箱、电话，并在同一条语句返回新编号；不要自动把联系人加入实际入住名单。
+Behavior: Create a contact and return the generated ID in the same statement. Do not create an occupant registration automatically.
+
+12. FIND_ROOMS — 按日期和人数查询可预订客房
+输入 / Inputs (7 个 %s / placeholders; ordered):
+  1) check_out: date / 计划离店日期
+  2) check_in: date / 计划入住日期
+  3) guests: int / 预订人数
+  4) room_type_id: int or None / 房型编号（允许 None）
+  5) room_type_id: int or None (repeat) / 房型编号（重复传入同一个值）（允许 None）
+  6) check_out: date (repeat) / 计划离店日期（重复传入同一个值）
+  7) check_in: date (repeat) / 计划入住日期（重复传入同一个值）
+返回 / Result: Zero or more rows: (room_id, room_number, type_name, max_guests, nightly_quote, total_quote).
+返回行数说明：返回零行或多行，每行六列。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] room_id / 房间内部编号
+  [1] room_number / 门牌号
+  [2] type_name / 房型名称
+  [3] max_guests / 房型最大容量
+  [4] nightly_quote / 新增住宿段的每晚报价
+  [5] total_quote / 报价总金额
+行为：只返回开放预订、容量大于等于预订人数、且没有日期冲突的客房。房型参数为 None 时不限房型；重复参数的位置不能合并。只排除与 confirmed 或 checked_in 订单的计划日期重叠。不按清洁状态筛选。总报价=计划晚数×当前房型基础每晚价，按 room_id 排序。
+Behavior: Only bookable rooms with capacity >= guests. None means any type. Exclude planned-date overlaps with confirmed/checked_in orders. Do not filter by cleaning state. Total quote = planned nights * current room-type base rate. Order by room_id.
+
+13. HAS_DATE_CONFLICT — 检查同房间的日期冲突
+输入 / Inputs (3 个 %s / placeholders; ordered):
+  1) room_id: int / 房间内部编号
+  2) check_out: date / 计划离店日期
+  3) check_in: date / 计划入住日期
+返回 / Result: Zero rows if clear; one truthy row such as (1,) if a conflict exists.
+返回行数说明：无冲突时返回零行，有冲突时返回一行，例如 (1,)。
+行为：已有订单状态为 confirmed 或 checked_in，且已有入住日 < 新离店日、已有离店日 > 新入住日时，构成冲突；首尾相接不算冲突。不要用固定返回一行的 SELECT EXISTS 替代，否则当前服务层会误判。
+Behavior: Conflict means an existing confirmed/checked_in order with existing.check_in_date < new check_out AND existing.check_out_date > new check_in. Adjacent stays are allowed.
+
+14. HAS_OTHER_OCCUPANT — 检查房间是否还有其他正在入住的订单
+输入 / Inputs (2 个 %s / placeholders; ordered):
+  1) room_id: int / 房间内部编号
+  2) excluded_reservation_id: int / 需要排除的订单编号
+返回 / Result: Zero rows if clear; one truthy row such as (1,) if another occupant exists.
+返回行数说明：无其他入住订单时返回零行，有则返回一行，例如 (1,)。
+行为：按房间查找 checked_in 订单，排除指定订单编号，不受计划日期限制。排除值为 -1 时通常表示不排除任何真实订单。没有结果必须是零行，不能返回 (False,)，因为非空元组仍会被 Python 判断为真。
+Behavior: Find any checked_in order in the room except the given ID, regardless of planned dates. The service passes -1 when nothing should be excluded. Return no rows, not (False,), for a negative result.
+
+15. COUNT_STAYING_GUESTS — 统计订单已登记的入住人数
+输入 / Inputs (1 个 %s / placeholders; ordered):
+  1) reservation_id: int / 订单编号
+返回 / Result: Exactly one row: (count: int,), including (0,) for an empty roster.
+返回行数说明：始终返回一行，包含整数人数；无登记时返回 (0,)。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] count / 已登记人数
+行为：统计该订单在 reservation_guest 中的记录数，不要按姓名去重。
+Behavior: Count all reservation_guest rows belonging to this reservation.
+
+16. LIST_STAYING_GUESTS — 查看订单的实际入住名单
+输入 / Inputs (1 个 %s / placeholders; ordered):
+  1) reservation_id: int / 订单编号
+返回 / Result: Zero or more rows: (reservation_guest_id, reservation_id, full_name).
+返回行数说明：返回零行或多行。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] reservation_guest_id / 入住登记编号
+  [1] reservation_id / 订单编号
+  [2] full_name / 实际入住者姓名
+行为：按入住登记编号排序；不同登记可以同名，不要自动去重。
+Behavior: List the roster ordered by reservation_guest_id. Do not deduplicate identical names.
+
+17. INSERT_STAYING_GUEST — 添加一名实际入住者
+输入 / Inputs (2 个 %s / placeholders; ordered):
+  1) reservation_id: int / 订单编号
+  2) full_name: str / 实际入住者姓名
+返回 / Result: Exactly one inserted row: (reservation_guest_id,).
+返回行数说明：返回一行，包含新生成的 reservation_guest_id。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] reservation_guest_id / 入住登记编号
+行为：为指定订单插入一条姓名记录，生成独立登记编号；姓名不作为唯一身份。
+Behavior: Create one roster entry with a newly generated registration ID. Names are not unique identities.
+
+18. DELETE_STAYING_GUEST — 删除一条入住登记
+输入 / Inputs (2 个 %s / placeholders; ordered):
+  1) reservation_id: int / 订单编号
+  2) reservation_guest_id: int / 入住登记编号
+返回 / Result: Zero or one deleted row: (reservation_guest_id,).
+返回行数说明：删除成功返回一行登记编号；两个编号不匹配时返回零行。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] reservation_guest_id / 入住登记编号
+行为：必须同时匹配订单编号和登记编号，不能只按登记编号删除；服务层使用返回结果判断是否删除成功。
+Behavior: Delete only when BOTH IDs match; return the deleted ID so the service can detect an invalid registration.
+
+19. INSERT_RESERVATION — 创建普通订单或接续订单
+输入 / Inputs (7 个 %s / placeholders; ordered):
+  1) guest_id: int / 预订联系人编号
+  2) room_id: int / 房间内部编号
+  3) check_in_date: date / 计划入住日期
+  4) check_out_date: date / 计划离店日期
+  5) guest_count: int / 预订人数
+  6) booked_nightly_rate: Decimal / 保存的每晚成交价
+  7) previous_reservation_id: int or None / 前段订单编号（允许 None）
+返回 / Result: Exactly one inserted row: (reservation_id, booked_nightly_rate, total_amount).
+返回行数说明：返回一行、三列：订单编号、保存的每晚成交价、计划总金额。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] reservation_id / 订单编号
+  [1] booked_nightly_rate / 保存的每晚成交价
+  [2] total_amount / 计划总金额
+行为：状态初始为 confirmed，实际入住退房时间为空。保存传入的成交价及前段订单编号；普通预订的前段编号为 None。总金额=计划晚数×保存的成交价。不要自动入住、修改清洁状态或修改旧订单。
+Behavior: Create status confirmed with actual times NULL. Save the supplied rate and previous link. Total amount = planned nights * saved rate. Do not change room housekeeping or automatically check in. Ordinary bookings pass None for the previous link.
+
+20. PERSONAL_RESERVATIONS — 按联系人查看订单
+输入 / Inputs (1 个 %s / placeholders; ordered):
+  1) guest_id: int / 预订联系人编号
+返回 / Result: Zero or more rows: (reservation_id, room_number, type_name, check_in_date, check_out_date, guest_count, booked_nightly_rate, total_amount, status, actual_check_in_at, actual_check_out_at, previous_reservation_id).
+返回行数说明：返回零行或多行，每行十二列。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] reservation_id / 订单编号
+  [1] room_number / 门牌号
+  [2] type_name / 房型名称
+  [3] check_in_date / 计划入住日期
+  [4] check_out_date / 计划离店日期
+  [5] guest_count / 预订人数
+  [6] booked_nightly_rate / 保存的每晚成交价
+  [7] total_amount / 计划总金额
+  [8] status / 订单状态
+  [9] actual_check_in_at / 实际入住时间
+  [10] actual_check_out_at / 实际退房时间
+  [11] previous_reservation_id / 前段订单编号
+行为：返回该联系人的全部状态订单，包括已取消、已退房和接续订单。金额使用计划日期与保存的成交价计算，按订单编号排序。
+Behavior: List all statuses for this contact, including continuation and cancelled orders, ordered by reservation_id. Total uses planned dates and the saved rate.
+
+21. SEARCH_RESERVATIONS — 员工查看全部订单或查单
+输入 / Inputs (4 个 %s / placeholders; ordered):
+  1) keyword: str / 查单关键字
+  2) keyword: str (repeat) / 查单关键字（重复传入同一个值）
+  3) keyword: str (repeat) / 查单关键字（重复传入同一个值）
+  4) keyword: str (repeat) / 查单关键字（重复传入同一个值）
+返回 / Result: Zero or more rows: (reservation_id, guest_id, contact_name, contact_phone, room_id, room_number, type_name, check_in_date, check_out_date, guest_count, booked_nightly_rate, total_amount, status, actual_check_in_at, actual_check_out_at, previous_reservation_id).
+返回行数说明：返回零行或多行，每行十六列；同名或相同电话可能匹配多笔订单。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] reservation_id / 订单编号
+  [1] guest_id / 预订联系人编号
+  [2] contact_name / 联系人姓名
+  [3] contact_phone / 联系人电话
+  [4] room_id / 房间内部编号
+  [5] room_number / 门牌号
+  [6] type_name / 房型名称
+  [7] check_in_date / 计划入住日期
+  [8] check_out_date / 计划离店日期
+  [9] guest_count / 预订人数
+  [10] booked_nightly_rate / 保存的每晚成交价
+  [11] total_amount / 计划总金额
+  [12] status / 订单状态
+  [13] actual_check_in_at / 实际入住时间
+  [14] actual_check_out_at / 实际退房时间
+  [15] previous_reservation_id / 前段订单编号
+行为：这是新增接口。关键字为空字符串时列出全部订单；否则精确匹配“转成文本的订单编号、完整联系人姓名、联系人电话”中的任一项。四个占位符都接收同一个关键字，不可自行减少占位符数量。包含全部订单状态，按订单编号排序，不要求员工事先知道 Guest ID。
+Behavior: NEW staff lookup: empty text lists all orders; otherwise match an exact reservation ID represented as text OR exact full contact name OR exact phone. Multiple matches are valid. Include all statuses. Order by reservation_id. Do not force the user to know a Guest ID.
+
+22. CANCEL_RESERVATION — 取消订单
+输入 / Inputs (1 个 %s / placeholders; ordered):
+  1) reservation_id: int / 订单编号
+返回 / Result: No result rows are consumed.
+返回行数说明：调用方不读取结果行。
+行为：只把指定订单状态改为 cancelled；联系人归属、当前状态和取消日期已经由 service.py 检查。
+Behavior: Set only status = cancelled for the selected reservation. The service checks ownership, current status and cancellation date first.
+
+23. CHECK_IN — 记录实际入住
+输入 / Inputs (2 个 %s / placeholders; ordered):
+  1) event_time: timezone-aware datetime / 实际操作时间
+  2) reservation_id: int / 订单编号
+返回 / Result: No result rows are consumed.
+返回行数说明：调用方不读取结果行。
+行为：把状态改为 checked_in，并把 actual_check_in_at 设为传入时间。保留计划日期与成交价。普通入住日期限制已按用户要求放宽，不要在这里重新增加计划日期限制。
+Behavior: Set status = checked_in and actual_check_in_at = supplied event_time. Do not change planned dates or price. Do not add a planned-date restriction: ordinary manual check-in was explicitly relaxed by the user.
+
+24. CHECK_OUT — 记录实际退房
+输入 / Inputs (2 个 %s / placeholders; ordered):
+  1) event_time: timezone-aware datetime / 实际操作时间
+  2) reservation_id: int / 订单编号
+返回 / Result: No result rows are consumed.
+返回行数说明：调用方不读取结果行。
+行为：把状态改为 checked_out，并把 actual_check_out_at 设为传入时间。不要改计划日期、价格，也不要在这条 SQL 中自动置脏；是否置脏由服务层按普通退房、原房接续、换房分别处理。
+Behavior: Set status = checked_out and actual_check_out_at = supplied event_time. Do not change planned dates or price, and do not dirty the room here: the service handles different ordinary/same-room/change-room cases.
+
+25. SET_HOUSEKEEPING — 更新房间清洁状态
+输入 / Inputs (2 个 %s / placeholders; ordered):
+  1) new_status: str / 新清洁状态
+  2) room_id: int / 房间内部编号
+返回 / Result: No result rows are consumed.
+返回行数说明：调用方不读取结果行。
+行为：只更新 housekeeping_status，取值为 clean、dirty、cleaning；不改变是否开放预订。
+Behavior: Update only housekeeping_status to clean, dirty or cleaning. Do not modify is_bookable.
+
+26. SET_ROOM_OPEN — 开放或关闭房间预订
+输入 / Inputs (2 个 %s / placeholders; ordered):
+  1) is_open: bool / 是否开放预订
+  2) room_id: int / 房间内部编号
+返回 / Result: No result rows are consumed.
+返回行数说明：调用方不读取结果行。
+行为：只更新 is_bookable，不改变清洁状态，不自动取消已有订单。
+Behavior: Update only is_bookable. Do not change housekeeping or cancel existing bookings.
+
+27. HAS_ACTIVE_SUCCESSOR — 检查是否有未取消的接续订单
+输入 / Inputs (1 个 %s / placeholders; ordered):
+  1) previous_reservation_id: int / 前段订单编号
+返回 / Result: Zero rows if absent; one truthy row such as (1,) if present.
+返回行数说明：没有时返回零行，有时返回一行，例如 (1,)。
+行为：查找 previous_reservation_id 等于指定前段编号、且状态不是 cancelled 的订单；用于避免重复接续，并供当前普通退房的接续保护检查使用。
+Behavior: Find a successor whose previous_reservation_id matches and whose status is not cancelled. Used to prevent duplicate active continuations and by the current ordinary-checkout guard.
+
+28. BOOKING_STATISTICS — 按房型统计预订
+输入 / Inputs: 无 / none (0 placeholders).
+返回 / Result: Zero or more rows: (type_name, all_bookings, cancelled, noncancelled_booked_value).
+返回行数说明：每个房型一行，包括尚无订单的房型；返回四列。
+返回列中文说明 / Column meanings (index: name / meaning):
+  [0] type_name / 房型名称
+  [1] all_bookings / 全部订单数量
+  [2] cancelled / 已取消订单数量
+  [3] noncancelled_booked_value / 未取消订单的计划金额合计
+行为：统计全部订单数、取消订单数和未取消订单的计划金额。接续段作为独立订单统计；金额不是实际收款。金额使用计划晚数与保存的成交价，按房型编号排序。没有订单时计数应为零；空分组的金额和取消数可为零或 NULL，显示层均可处理。
+Behavior: One group per room type, including types with no orders. Count all reservation IDs; count cancelled orders; sum planned nights * saved rate for non-cancelled orders. Include continuation segments as separate orders. These are booked values, not collected payments. Order by room_type_id.
+
+四、五表字段与连接信息 / Five-table data and connection settings
+以下字段是当前代码使用的数据；最终物理表名有差异时，由 SQL 映射到相同返回结果。
+These are the current data fields; adapt SQL if final physical names differ while preserving caller results.
+guest: guest_id, name, email, phone
+room_type: room_type_id, type_name, max_guests, base_nightly_rate
+room: room_id, room_number, room_type_id, is_bookable, housekeeping_status
+reservation: reservation_id, guest_id, room_id, check_in_date, check_out_date, guest_count, booked_nightly_rate, status, actual_check_in_at, actual_check_out_at, previous_reservation_id
+reservation_guest: reservation_guest_id, reservation_id, full_name
+联系人不是实际入住名单；同名或相同电话不代表同一人，不能假定唯一。邮箱、前段编号和未记录的实际时间允许为空。
+Contacts are separate from occupant registrations. Names/phones are not assumed unique; email, previous links and unrecorded actual times may be NULL.
+需要确认：地址、端口、数据库名、账号、表所在 schema；密码在本机运行时输入，不写入共享文件。
+Confirm host, port, database name, account and schema; enter passwords locally rather than sharing them in files.
+当前演示连接：localhost:5432 / hotel_tianyi_demo / postgres / hotel_demo；这些名字不是 Word 强制指定的最终名称。
+Current demo settings: localhost:5432 / hotel_tianyi_demo / postgres / hotel_demo; these deployment names were not fixed by the Word design.
+当前会话：Australia/Sydney，READ COMMITTED，手动提交事务。/ Current session: Australia/Sydney, READ COMMITTED, explicit transactions.
+
+五、当前规则及与原 Word 的变化 / Current behavior and Word-draft changes
+新增员工查单 SEARCH_RESERVATIONS；Customer / Staff 是菜单分流，不是身份登录验证。
+Staff search was added; Customer/Staff selection is menu routing, not authentication.
+普通入住已按用户要求去掉计划日期限制；新预订和查空房仍不允许过去的开始日期。
+Ordinary check_in no longer checks the planned date window; new booking/search dates still cannot begin before the hotel date.
+激活接续 activate_continuation 仍有下一段计划日期检查，未随普通入住一起移除。
+Continuation activation still checks the next segment planned date window.
+人数只需为正数且不超过容量；办理入住时，名单人数必须等于预订人数。联系人本人入住也要登记。
+Positive guest counts may be below capacity; the roster must equal the reserved count at check-in, including the contact if staying.
+实际入住要求开放、干净、无其他正在入住的订单；普通退房与房间置脏由服务层同一事务完成。
+Actual check-in needs an open, clean, unoccupied room; ordinary checkout and dirtying are atomic service operations.
+计划日期和成交价在入住退房时保留；延住新增订单，不覆盖旧订单。同房接续不置脏，换房只把旧房置脏。
+Check-in/out preserve planned dates and prices; extensions add linked orders. Same-room activation does not dirty a room; a room change dirties the old room.
+当前演示细则：仅入住前维护名单，清洁顺序 dirty -> cleaning -> clean，有人入住不能设 dirty/cleaning，存在未取消后段时普通退房拒绝。
+Current demo policies: roster edits only before check-in; dirty -> cleaning -> clean; occupied rooms cannot be dirtied/cleaned; ordinary checkout refuses non-cancelled successors.
+这些演示细则应与小组确认，不应全部声称是原 Word 或课程的强制要求。
+Confirm these demo details with the group; do not present all of them as mandatory original Word/course rules.
+先锁房间再锁订单，多记录按编号升序锁定；READ COMMITTED 下，拿到房间锁后单独再次查冲突。
+Lock rooms before reservations, in ascending ID order; recheck conflicts in a separate statement after obtaining the room lock.
+数据库触发器或额外约束若实现了业务规则，需要与服务层协调，特别是已放宽的普通入住日期。
+Coordinate triggers/additional constraints with service behavior, especially the relaxed ordinary check-in dates.
+
+六、服务层函数参考 / Existing service functions
+这些函数已在 service.py 中实现，queries.py 只提供它们使用的 SQL 字符串。
+These functions already exist in service.py; queries.py supplies their SQL string variables only.
+- list_types()
+- list_rooms()
+- add_guest(name, email, phone)
+- find_rooms(check_in, check_out, guests, room_type_id=None)
+- create_reservation(guest_id, room_id, check_in, check_out, guests)
+- personal_reservations(guest_id)
+- search_reservations(keyword='')
+- cancel_reservation(guest_id, reservation_id)
+- list_staying_guests(reservation_id)
+- add_staying_guest(reservation_id, full_name)
+- remove_staying_guest(reservation_id, reservation_guest_id)
+- check_in(reservation_id)
+- check_out(reservation_id)
+- set_room_open(room_id, is_open)
+- set_housekeeping_status(room_id, new_status)
+- find_extension_options(reservation_id, new_check_out)
+- create_extension(reservation_id, target_room_id, new_check_out, accepted_rate)
+- activate_continuation(next_reservation_id)
+- booking_statistics()
+
+七、交接完成后 / Completing integration
+把完成的 queries.py 放在三个 Python 文件旁边，使用最终建表和样例脚本建立数据库，并更新 db.py 的连接及 search_path。
+Place the completed queries.py beside the three Python files, initialize the final database with schema/seed scripts, and update db.py connection settings and search_path.
+再实际验证：顾客预订 -> 员工查单 -> 入住名单 -> 入住 -> 退房，以及取消、原房延住和换房。
+Validate on PostgreSQL: customer booking -> staff search -> roster -> check-in -> checkout, cancellation, same-room extension and room-change extension.
+本清单仅描述接口；字段、占位符和源代码已核对，不等于最终数据库集成测试已经通过。
+This document specifies the interface; checking names/placeholders/source compatibility is not proof of final PostgreSQL integration passing.

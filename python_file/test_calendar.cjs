@@ -1,0 +1,15 @@
+const assert = require('node:assert/strict');
+const {parseDate,isoDate,shiftMonth} = require('./static/calendar.js');
+assert.equal(isoDate(parseDate('2028-02-29')),'2028-02-29');
+assert.equal(parseDate('2026-02-29'),null);
+assert.equal(parseDate('2026-04-31'),null);
+assert.equal(parseDate('20261025'),null);
+assert.equal(parseDate('2026-1-2'),null);
+assert.equal(parseDate('0000-01-01'),null);
+assert.equal(isoDate(parseDate('0001-01-01')),'0001-01-01');
+assert.equal(isoDate(parseDate('9999-12-31')),'9999-12-31');
+assert.equal(isoDate(shiftMonth(parseDate('2028-01-31'),1)),'2028-02-29');
+assert.equal(isoDate(shiftMonth(parseDate('2026-01-31'),1)),'2026-02-28');
+assert.equal(isoDate(shiftMonth(parseDate('2026-12-31'),1)),'2027-01-31');
+assert.equal(isoDate(shiftMonth(parseDate('2026-01-31'),-1)),'2025-12-31');
+console.log('PASS: calendar date parsing, leap years, month boundaries and years 0001–9999.');

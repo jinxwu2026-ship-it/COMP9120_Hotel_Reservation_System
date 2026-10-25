@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}Reservation confirmed{% endblock %}
+{% block content %}<section class="panel narrow"><p class="eyebrow">YOUR STAY IS RESERVED</p><h1>Reservation confirmed.</h1><p>Keep your reservation number and contact reception for changes.</p>
+<dl><dt>Reservation</dt><dd>#{{ item.reservation_id }}</dd><dt>Room</dt><dd>{{ item.room_number }} · {{ item.type_name }}</dd><dt>Dates</dt><dd>{{ item.check_in_date }} → {{ item.check_out_date }}</dd><dt>Guests</dt><dd>{{ item.guest_count }}</dd><dt>Nightly rate</dt><dd>{{ '%.2f'|format(item.rate) }}</dd><dt>Stay total</dt><dd>{{ '%.2f'|format(item.amount) }}</dd><dt>Status</dt><dd>{{ item.status|replace('_',' ')|title }}</dd></dl>
+<p class="hint">This confirmation is available only in the browser session that made the latest booking. It is not a shareable link or a customer account. No payment has been collected.</p><p class="section-gap"><a class="button" href="{{ url_for('availability') }}">Find another stay →</a></p></section>{% endblock %}

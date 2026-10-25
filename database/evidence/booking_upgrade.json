@@ -1,0 +1,24 @@
+{
+  "live_business_and_staff_rows_preserved": true,
+  "business_counts": {
+    "guest": 50,
+    "room_type": 8,
+    "room": 40,
+    "reservation": 200,
+    "reservation_guest": 351,
+    "staff": 2
+  },
+  "date": "2026-10-25 Australia/Sydney",
+  "relations": 7,
+  "columns": 48,
+  "foreign_keys": 7,
+  "indexes": 17,
+  "actual_role": [
+    "hotel_app",
+    false,
+    false,
+    false
+  ],
+  "actual_app_role_http_batch_discount_amendment_history": "PASS",
+  "audit_update_and_delete_refused": "PASS"
+}
